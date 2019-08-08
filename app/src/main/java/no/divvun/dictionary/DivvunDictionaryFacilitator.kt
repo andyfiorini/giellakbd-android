@@ -122,7 +122,10 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
     override fun addToUserHistory(suggestion: String?, wasAutoCapitalized: Boolean, ngramContext: NgramContext, timeStampInSeconds: Long, blockPotentiallyOffensive: Boolean) {
         Log.d(tag, "addToUserHistory")
         suggestion?.let {
-            personalDictionary.words.add(suggestion)
+            if(!dictionary.isInDictionary(suggestion)){
+                Log.d(tag, "Adding non known word: $suggestion")
+                personalDictionary.addWord(suggestion)
+            }
         }
     }
 
@@ -130,7 +133,7 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
     override fun unlearnFromUserHistory(word: String?, ngramContext: NgramContext, timeStampInSeconds: Long, eventType: Int) {
         Log.d(tag, "unlearnFromUserHistory")
         word?.let {
-            personalDictionary.words.remove(it)
+            personalDictionary.undoWord(word)
         }
     }
 
@@ -140,10 +143,12 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
 
         val suggestionResults = SuggestionResults(divvunSuggestions.size + personalSuggestions.size, ngramContext.isBeginningOfSentenceContext, true)
 
-
         // Add all our suggestions
         suggestionResults.addAll(divvunSuggestions)
         suggestionResults.addAll(personalSuggestions)
+
+        Log.d("DivvunDictFac", "Personal suggestions: $personalSuggestions")
+        Log.d("DivvunDictFac", "All suggestions: $suggestionResults")
 
         return suggestionResults
     }

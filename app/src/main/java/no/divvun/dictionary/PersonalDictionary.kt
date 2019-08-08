@@ -15,9 +15,10 @@ import no.divvun.createTag
 import no.divvun.levenshtein
 import kotlin.collections.ArrayList
 
-class PersonalDictionary(private val context: Context?, locale: Locale?): Dictionary(TYPE_USER, locale) {
+class PersonalDictionary(private val context: Context?, locale: Locale?) : Dictionary(TYPE_USER, locale) {
 
-    val words = mutableSetOf("banana", "hokuspokus", "bananab")
+    private val words = mutableSetOf<String>()
+    private val candidates = mutableSetOf<String>()
 
     override fun getSuggestions(
             composedData: ComposedData,
@@ -50,7 +51,25 @@ class PersonalDictionary(private val context: Context?, locale: Locale?): Dictio
         return words.contains(word)
     }
 
-    companion object {
-        const val N_BEST_SUGGESTION_SIZE = 3L
+    fun addWord(word: String) {
+        if (isInDictionary(word)) {
+            Log.d("PersonalDict", "$word already in personal dictionary")
+            return
+        }
+
+        if (candidates.contains(word)){
+            Log.d("PersonalDict", "$word was candidate, now in personal dictionary")
+            // Word is already candidate, second time typed. Time to add to personal dictionary.
+            candidates.remove(word)
+            words.add(word)
+        } else {
+            Log.d("PersonalDict", "$word is new candidate")
+            candidates.add(word)
+        }
+    }
+
+    fun undoWord(word: String) {
+        Log.d("PersonalDict", "$word is no longer candidate")
+        candidates.remove(word)
     }
 }
