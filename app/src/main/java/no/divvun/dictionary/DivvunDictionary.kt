@@ -15,6 +15,7 @@ import no.divvun.divvunspell.ThfstChunkedBoxSpellerArchive
 import java.util.*
 import kotlin.collections.ArrayList
 
+<<<<<<< HEAD
 class DivvunDictionary(private val context: Context?, locale: Locale?): Dictionary(TYPE_MAIN, locale) {
     private val TAG = "DivvunDictionary"
 
