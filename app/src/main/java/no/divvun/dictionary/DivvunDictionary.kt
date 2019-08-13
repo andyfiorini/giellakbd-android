@@ -58,7 +58,7 @@ class DivvunDictionary(private val context: Context?, locale: Locale?): Dictiona
     }
 
     override fun isInDictionary(word: String): Boolean {
-        val speller = this.speller ?: return true
+        val speller = this.speller ?: return false
 
         return speller.isCorrect(word)
     }

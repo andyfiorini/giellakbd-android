@@ -11,6 +11,7 @@ import com.android.inputmethod.latin.common.ComposedData
 import com.android.inputmethod.latin.settings.SettingsValuesForSuggestion
 import com.android.inputmethod.latin.utils.SuggestionResults
 import no.divvun.createTag
+import no.divvun.dictionary.personal.PersonalDictionary
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -19,8 +20,8 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
     private val tag = createTag(this)
     private var isActive = false
 
-    var dictionary = DivvunDictionary(null,null)
-    var personalDictionary = PersonalDictionary(null,null)
+    private var dictionary = DivvunDictionary(null,null)
+    private lateinit var personalDictionary: PersonalDictionary
 
     // STUB
     override fun setValidSpellingWordReadCache(cache: LruCache<String, Boolean>) {
@@ -126,6 +127,12 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
                 Log.d(tag, "Adding non known word: $suggestion")
                 personalDictionary.addWord(suggestion)
             }
+        }
+
+        val prevWord = ngramContext.getNthPrevWord(1).toString()
+
+        if(personalDictionary.isInDictionary(prevWord)){
+            personalDictionary.updateContext(ngramContext, suggestion)
         }
     }
 

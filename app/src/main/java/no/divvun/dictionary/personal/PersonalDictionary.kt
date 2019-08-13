@@ -1,24 +1,18 @@
-package no.divvun.dictionary
+package no.divvun.dictionary.personal
 
 import android.content.Context
 import android.util.Log
 import com.android.inputmethod.latin.Dictionary
 import com.android.inputmethod.latin.NgramContext
-import com.android.inputmethod.latin.SuggestedWords
+import com.android.inputmethod.latin.SuggestedWords.SuggestedWordInfo
 import com.android.inputmethod.latin.common.ComposedData
 import com.android.inputmethod.latin.settings.SettingsValuesForSuggestion
-import java.util.*
-import com.android.inputmethod.latin.SuggestedWords.SuggestedWordInfo
-import no.divvun.DivvunSpell
-import no.divvun.DivvunUtils
-import no.divvun.createTag
 import no.divvun.levenshtein
-import kotlin.collections.ArrayList
+import java.util.*
 
 class PersonalDictionary(private val context: Context?, locale: Locale?) : Dictionary(TYPE_USER, locale) {
 
-    private val words = mutableSetOf<String>()
-    private val candidates = mutableSetOf<String>()
+    private val database: PersonalDictionaryDatabase = PersonalDictionaryDatabase.getInstance(context!!)
 
     override fun getSuggestions(
             composedData: ComposedData,
@@ -30,11 +24,13 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
             inOutWeightOfLangModelVsSpatialModel: FloatArray): ArrayList<SuggestedWordInfo> {
 
 
-        val scoreMap = words
+        val scoreMap = database.dictionaryDao().dictionary()
+                .asSequence()
+                .map { it.word }
                 .map { it to it.levenshtein(composedData.mTypedWord) }
                 .filter { it.second < 4 }
                 .sortedBy { it.second }
-                .take(5)
+                .take(5).toList()
 
         Log.d("PersonalDictionary", scoreMap.toString())
 
@@ -48,7 +44,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
     }
 
     override fun isInDictionary(word: String): Boolean {
-        return words.contains(word)
+        return database.dictionaryDao().isInDictionary(word)
     }
 
     fun addWord(word: String) {
@@ -57,19 +53,27 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
             return
         }
 
-        if (candidates.contains(word)){
+        if (database.candidatesDao().isCandidate(word) > 0) {
             Log.d("PersonalDict", "$word was candidate, now in personal dictionary")
             // Word is already candidate, second time typed. Time to add to personal dictionary.
-            candidates.remove(word)
-            words.add(word)
+            database.candidatesDao().removeCandidate(word)
+            database.dictionaryDao().insertWord(DictionaryWord(word))
         } else {
             Log.d("PersonalDict", "$word is new candidate")
-            candidates.add(word)
+            database.candidatesDao().insertCandidate(Candidate(word))
         }
     }
 
     fun undoWord(word: String) {
         Log.d("PersonalDict", "$word is no longer candidate")
-        candidates.remove(word)
+        database.candidatesDao().removeCandidate(word)
+    }
+
+    fun updateContext(ngramContext: NgramContext, nextWord: String?) {
+        val word = ngramContext.getNthPrevWord(1)
+        if (word != null && isInDictionary(word.toString())) {
+            val prevWord = ngramContext.getNthPrevWord(2)?.toString()
+            database.dictionaryDao().insertContext(word.toString(), WordContext(prevWord, nextWord))
+        }
     }
 }

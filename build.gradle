@@ -6,10 +6,11 @@ buildscript {
         constraintLayoutVersion = '2.0.0-alpha2'
         legacySupportVersion = '1.0.0'
         rxJavaVersion = '2.2.3'
-        rxAndroidVersion = '2.1.0'
+        rxAndroidVersion = '2.1.1'
         rxKotlinVersion = '2.3.0'
-        navigationVersion='1.0.0-alpha07'
-        ktxVersion = '1.0.1'
+        navigationVersion='1.0.0'
+        ktxVersion = '1.0.2'
+        archRoomVersion = '2.2.0-alpha02'
     }
 
     repositories {
