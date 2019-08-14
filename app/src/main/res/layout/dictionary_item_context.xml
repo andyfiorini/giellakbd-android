@@ -6,7 +6,20 @@
     android:orientation="vertical">
 
     <TextView xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/tv_dictitem_word"
+        android:id="@+id/tv_dictitem_prev"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:ellipsize="end"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_dictitem_next"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Sampleword" />
+
+    <TextView xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/tv_dictitem_next"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -14,7 +27,7 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_dictitem_prev"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Sampleword" />
 

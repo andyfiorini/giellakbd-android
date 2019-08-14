@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_dictionary.xml"
+    app:startDestination="@id/dictionaryFragment">
+
+    <fragment
+        android:id="@+id/dictionaryFragment"
+        android:name="com.android.inputmethod.latin.personaldictionary.dictionary.DictionaryFragment"
+        android:label="@string/fragment_title_personal_dictionary" >
+        <action
+            android:id="@+id/action_dictionaryFragment_to_wordFragment"
+            app:destination="@id/wordFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/wordFragment"
+        android:name="com.android.inputmethod.latin.personaldictionary.word.WordFragment"
+        android:label="WordFragment" >
+        <argument
+            android:name="wordNavArg"
+            app:argType="com.android.inputmethod.latin.personaldictionary.word.WordNavArg" />
+    </fragment>
+</navigation>

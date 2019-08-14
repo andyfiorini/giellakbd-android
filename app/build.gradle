@@ -7,6 +7,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 play {
     track = "alpha"
@@ -49,6 +50,19 @@ android {
     lintOptions {
         checkReleaseBuilds false
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    compileOptions {
+        targetCompatibility '1.8'
+        sourceCompatibility '1.8'
+    }
+}
+
+androidExtensions {
+    experimental = true
 }
 
 
@@ -59,12 +73,14 @@ dependencies {
     implementation "net.java.dev.jna:jna:5.4.0@aar"
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
-    implementation "android.arch.navigation:navigation-fragment-ktx:$navigationVersion"
-    implementation "android.arch.navigation:navigation-ui-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
     implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
+
+    implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0'
 
     // Android Kotlin Extensions
     implementation "androidx.core:core-ktx:$ktxVersion"
@@ -79,6 +95,7 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$archRoomVersion"
     kapt "android.arch.persistence.room:compiler:$archRoomVersion"
     implementation "android.arch.persistence.room:rxjava2:$archRoomVersion"
+
 }
 
 repositories {

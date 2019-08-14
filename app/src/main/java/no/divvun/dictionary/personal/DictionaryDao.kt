@@ -1,5 +1,6 @@
 package no.divvun.dictionary.personal
 
+import android.util.Log
 import androidx.room.*
 import io.reactivex.Flowable
 
@@ -29,6 +30,9 @@ interface DictionaryDao {
         wordContext.wordId = dictionaryWord.wordId
         return insertContext(wordContext)
     }
+
+    @Query("SELECT * FROM WordContext WHERE word_id = :wordId")
+    fun wordContexts(wordId: Long): Flowable<List<WordContext>>
 
     @Insert
     fun insertContext(wordContext: WordContext): Long

@@ -20,7 +20,8 @@ data class DictionaryWord(
     var wordId: Long = 0
 }
 
-@Entity(foreignKeys = [
+@Entity(tableName = "WordContext",
+        foreignKeys = [
     ForeignKey(entity = DictionaryWord::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("word_id"),
