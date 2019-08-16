@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/wordFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.word.WordFragment"
-        android:label="WordFragment" >
+        android:label="" >
         <argument
             android:name="wordNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.word.WordNavArg" />

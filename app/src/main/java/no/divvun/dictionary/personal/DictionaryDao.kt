@@ -3,6 +3,7 @@ package no.divvun.dictionary.personal
 import android.util.Log
 import androidx.room.*
 import io.reactivex.Flowable
+import io.reactivex.Observable
 
 @Dao
 interface DictionaryDao {
@@ -10,7 +11,7 @@ interface DictionaryDao {
     fun dictionary(): List<DictionaryWord>
 
     @Query("SELECT * FROM Dictionary")
-    fun dictionaryF(): Flowable<List<DictionaryWord>>
+    fun dictionaryO(): Observable<List<DictionaryWord>>
 
     @Query("SELECT * FROM Dictionary WHERE word=:word")
     fun isInDictionary(word: String): Boolean
@@ -20,6 +21,9 @@ interface DictionaryDao {
 
     @Query("SELECT * FROM Dictionary WHERE word = :word")
     fun findWord(word: String): Array<DictionaryWord>
+
+    @Query("SELECT * FROM Dictionary WHERE id = :wordId")
+    fun findWord(wordId: Long): Observable<DictionaryWord>
 
     @Query("DELETE FROM Dictionary WHERE id = :wordId")
     fun removeWord(wordId: Long): Int

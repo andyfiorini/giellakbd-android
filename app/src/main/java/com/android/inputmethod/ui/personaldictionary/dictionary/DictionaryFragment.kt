@@ -1,9 +1,7 @@
 package com.android.inputmethod.ui.personaldictionary.dictionary
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,7 +34,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true)
         database = PersonalDictionaryDatabase.getInstance(context!!)
         dictionaryUseCase = DictionaryUseCase(database)
         removeWordUseCase = RemoveWordUseCase(database)
@@ -72,6 +70,11 @@ class DictionaryFragment : Fragment(), DictionaryView {
 
     override fun render(viewState: DictionaryViewState) {
         adapter.update(viewState.dictionary)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.dictionary_menu, menu)
     }
 
     override fun events(): Observable<DictionaryEvent> {
