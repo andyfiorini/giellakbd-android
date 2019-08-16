@@ -21,8 +21,8 @@ interface DictionaryDao {
     @Query("SELECT * FROM Dictionary WHERE word = :word")
     fun findWord(word: String): Array<DictionaryWord>
 
-    @Query("DELETE FROM Dictionary WHERE word = :word")
-    fun removeWord(word: String): Int
+    @Query("DELETE FROM Dictionary WHERE id = :wordId")
+    fun removeWord(wordId: Long): Int
 
     @Transaction
     fun insertContext(word: String, wordContext: WordContext): Long {

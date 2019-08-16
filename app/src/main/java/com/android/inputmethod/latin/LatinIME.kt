@@ -64,7 +64,7 @@ import com.android.inputmethod.latin.define.DebugFlags
 import com.android.inputmethod.latin.define.ProductionFlags
 import com.android.inputmethod.latin.inputlogic.InputLogic
 import com.android.inputmethod.latin.permissions.PermissionsManager
-import com.android.inputmethod.latin.personaldictionary.PersonalDictionaryActivity
+import com.android.inputmethod.ui.personaldictionary.PersonalDictionaryActivity
 import com.android.inputmethod.latin.settings.Settings
 import com.android.inputmethod.latin.settings.SettingsActivity
 import com.android.inputmethod.latin.suggestions.SuggestionStripView

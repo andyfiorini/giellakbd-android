@@ -5,7 +5,7 @@ import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.Dictiona
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class DictionaryPresenter(private val view: DictionaryView, private val useCase: DictionaryUseCase) {
+class DictionaryPresenter(private val view: DictionaryView, private val useCase: DictionaryUseCase, private val removeWordUseCase: RemoveWordUseCase) {
 
     fun start(): Observable<DictionaryViewState> {
         val disposable = view.events()
@@ -14,6 +14,9 @@ class DictionaryPresenter(private val view: DictionaryView, private val useCase:
                     when (it) {
                         is DictionaryEvent.OnWordSelected -> {
                             view.navigateToWordFragment(it.wordId)
+                        }
+                        is DictionaryEvent.OnRemoveEvent -> {
+                            removeWordUseCase.execute(it.wordId)
                         }
                     }
                 }

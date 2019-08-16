@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.ItemEventEmitter
-import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextEvent
-import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextViewState
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.dictionary_item.view.*
@@ -30,6 +28,9 @@ class DictionaryWordView(context: Context, attr: AttributeSet?, style: Int) : Co
 
 
     override fun events(): Observable<DictionaryWordEvent> {
-        return this.clicks().map { DictionaryWordEvent.OnSelectWordEvent(viewState.wordId) }
+        return Observable.merge(
+                tv_dictitem_word.clicks().map { DictionaryWordEvent.OnClickPressEvent(viewState.wordId) },
+                iv_dictitem_remove.clicks().map { DictionaryWordEvent.OnClickRemoveEvent(viewState.wordId) }
+        )
     }
 }

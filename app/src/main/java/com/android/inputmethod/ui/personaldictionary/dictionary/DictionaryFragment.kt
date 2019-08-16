@@ -13,8 +13,6 @@ import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
 import com.android.inputmethod.ui.personaldictionary.DictionaryUseCase
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordEvent
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewHolder
-import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextEvent
-import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextViewHolder
 import com.android.inputmethod.ui.personaldictionary.word.WordNavArg
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -28,7 +26,8 @@ class DictionaryFragment : Fragment(), DictionaryView {
     private lateinit var disposable: Disposable
 
     private lateinit var database: PersonalDictionaryDatabase
-    private lateinit var useCase: DictionaryUseCase
+    private lateinit var dictionaryUseCase: DictionaryUseCase
+    private lateinit var removeWordUseCase: RemoveWordUseCase
     private lateinit var presenter: DictionaryPresenter
 
     private val factory = DictionaryWordViewHolder.DictionaryWordViewHolderFactory
@@ -38,8 +37,9 @@ class DictionaryFragment : Fragment(), DictionaryView {
         super.onCreate(savedInstanceState)
 
         database = PersonalDictionaryDatabase.getInstance(context!!)
-        useCase = DictionaryUseCase(database)
-        presenter = DictionaryPresenter(this, useCase)
+        dictionaryUseCase = DictionaryUseCase(database)
+        removeWordUseCase = RemoveWordUseCase(database)
+        presenter = DictionaryPresenter(this, dictionaryUseCase, removeWordUseCase)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -76,8 +76,11 @@ class DictionaryFragment : Fragment(), DictionaryView {
     override fun events(): Observable<DictionaryEvent> {
         return adapter.events().map {
             when (it) {
-                is DictionaryWordEvent.OnSelectWordEvent -> {
+                is DictionaryWordEvent.OnClickPressEvent -> {
                     DictionaryEvent.OnWordSelected(it.wordId)
+                }
+                is DictionaryWordEvent.OnClickRemoveEvent ->{
+                    DictionaryEvent.OnRemoveEvent(it.wordId)
                 }
             }
         }

@@ -16,8 +16,25 @@
         android:gravity="center_vertical"
         android:background="?android:selectableItemBackground"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_dictitem_remove"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Sampleword" />
+
+    <ImageView
+        android:id="@+id/iv_dictitem_remove"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:padding="16dp"
+        android:ellipsize="end"
+        android:textSize="16sp"
+        android:gravity="center_vertical"
+        android:background="?android:selectableItemBackground"
+
+        android:src="@drawable/sym_keyboard_delete_lxx_light"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_dictitem_word"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Sampleword" />
 
