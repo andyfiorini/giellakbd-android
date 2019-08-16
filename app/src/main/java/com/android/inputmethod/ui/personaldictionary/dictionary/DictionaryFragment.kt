@@ -21,7 +21,6 @@ import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
 class DictionaryFragment : Fragment(), DictionaryView {
     private lateinit var rvDictionary: RecyclerView
-    //    private lateinit var adapter: DictionaryRecyclerAdapter
     private lateinit var disposable: Disposable
 
     private lateinit var database: PersonalDictionaryDatabase
@@ -68,6 +67,10 @@ class DictionaryFragment : Fragment(), DictionaryView {
         )
     }
 
+    override fun navigateToUploadDictionary() {
+        findNavController().navigate(DictionaryFragmentDirections.actionDictionaryFragmentToUploadFragment())
+    }
+
     override fun render(viewState: DictionaryViewState) {
         adapter.update(viewState.dictionary)
     }
@@ -75,6 +78,15 @@ class DictionaryFragment : Fragment(), DictionaryView {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.dictionary_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.fragment_upload -> {
+                navigateToUploadDictionary()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun events(): Observable<DictionaryEvent> {

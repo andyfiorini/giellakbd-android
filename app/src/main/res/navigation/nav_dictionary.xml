@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_dictionaryFragment_to_wordFragment"
             app:destination="@id/wordFragment" />
+        <action
+            android:id="@+id/action_dictionaryFragment_to_uploadFragment"
+            app:destination="@id/uploadFragment" />
     </fragment>
 
     <fragment
@@ -22,4 +25,8 @@
             android:name="wordNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.word.WordNavArg" />
     </fragment>
+    <fragment
+        android:id="@+id/uploadFragment"
+        android:name="com.android.inputmethod.ui.personaldictionary.upload.UploadFragment"
+        android:label="Upload Dictionary" />
 </navigation>
