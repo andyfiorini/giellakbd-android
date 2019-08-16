@@ -96,6 +96,8 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:$archRoomVersion"
     implementation "android.arch.persistence.room:rxjava2:$archRoomVersion"
 
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
 }
 
 repositories {

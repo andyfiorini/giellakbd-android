@@ -1,4 +1,4 @@
-package com.android.inputmethod.latin.personaldictionary.word
+package com.android.inputmethod.ui.personaldictionary.word
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

@@ -1,4 +1,4 @@
-package com.android.inputmethod.latin.personaldictionary
+package com.android.inputmethod.ui.personaldictionary
 
 import io.reactivex.Observable
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase

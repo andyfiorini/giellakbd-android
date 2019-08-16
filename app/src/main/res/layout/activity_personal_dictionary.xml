@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.inputmethod.latin.personaldictionary.PersonalDictionaryActivity">
+    tools:context="com.android.inputmethod.ui.personaldictionary.PersonalDictionaryActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/abl_dictionary"

@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".personaldictionary.PersonalDictionaryActivity"
+            android:name="com.android.inputmethod.ui.personaldictionary.PersonalDictionaryActivity"
             android:label="@string/title_activity_personal_dictionary"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- Services -->

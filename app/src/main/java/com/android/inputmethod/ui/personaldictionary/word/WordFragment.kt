@@ -1,4 +1,4 @@
-package com.android.inputmethod.latin.personaldictionary.word
+package com.android.inputmethod.ui.personaldictionary.word
 
 import android.content.Context
 import android.os.Bundle
@@ -12,7 +12,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
-import com.android.inputmethod.latin.personaldictionary.WordContextUseCase
+import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
+import com.android.inputmethod.ui.personaldictionary.WordContextUseCase
+import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextViewHolder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -24,8 +26,9 @@ import no.divvun.dictionary.personal.WordContext
 class WordFragment : Fragment(), WordView {
 
     private lateinit var rvDictionary: RecyclerView
-    private lateinit var adapter: WordRecyclerAdapter
     private lateinit var disposable: Disposable
+    private val factory = WordContextViewHolder.DictionaryWordViewHolderFactory
+    private val adapter = EventAdapter(factory)
 
     private lateinit var database: PersonalDictionaryDatabase
     private lateinit var useCase: WordContextUseCase
@@ -47,8 +50,6 @@ class WordFragment : Fragment(), WordView {
 
         rvDictionary = view.rv_personaldict_wordcontext
         rvDictionary.layoutManager = LinearLayoutManager(context!!)
-        adapter = WordRecyclerAdapter(context!!)
-
         rvDictionary.adapter = adapter
         return view
     }

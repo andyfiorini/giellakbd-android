@@ -1,4 +1,4 @@
-package com.android.inputmethod.latin.personaldictionary.dictionary
+package com.android.inputmethod.ui.personaldictionary.dictionary
 
 sealed class DictionaryEvent {
     data class OnWordSelected(val wordId: Long): DictionaryEvent()

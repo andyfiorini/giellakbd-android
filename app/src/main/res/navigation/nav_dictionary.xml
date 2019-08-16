@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/dictionaryFragment"
-        android:name="com.android.inputmethod.latin.personaldictionary.dictionary.DictionaryFragment"
+        android:name="com.android.inputmethod.ui.personaldictionary.dictionary.DictionaryFragment"
         android:label="@string/fragment_title_personal_dictionary" >
         <action
             android:id="@+id/action_dictionaryFragment_to_wordFragment"
@@ -16,10 +16,10 @@
 
     <fragment
         android:id="@+id/wordFragment"
-        android:name="com.android.inputmethod.latin.personaldictionary.word.WordFragment"
+        android:name="com.android.inputmethod.ui.personaldictionary.word.WordFragment"
         android:label="WordFragment" >
         <argument
             android:name="wordNavArg"
-            app:argType="com.android.inputmethod.latin.personaldictionary.word.WordNavArg" />
+            app:argType="com.android.inputmethod.ui.personaldictionary.word.WordNavArg" />
     </fragment>
 </navigation>

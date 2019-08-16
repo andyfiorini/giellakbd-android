@@ -1,4 +1,4 @@
-package com.android.inputmethod.latin.personaldictionary.dictionary
+package com.android.inputmethod.ui.personaldictionary.dictionary
 
 import io.reactivex.Observable
 
