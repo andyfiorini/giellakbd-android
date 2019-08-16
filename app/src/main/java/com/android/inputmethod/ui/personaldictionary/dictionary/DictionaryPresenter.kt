@@ -1,7 +1,8 @@
 package com.android.inputmethod.ui.personaldictionary.dictionary
 
-import com.android.inputmethod.ui.personaldictionary.DictionaryUseCase
+import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewState
+import com.android.inputmethod.usecases.RemoveWordUseCase
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 

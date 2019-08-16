@@ -1,4 +1,4 @@
-package com.android.inputmethod.ui.personaldictionary.dictionary
+package com.android.inputmethod.usecases
 
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 

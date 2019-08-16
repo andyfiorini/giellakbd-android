@@ -1,4 +1,4 @@
-package com.android.inputmethod.ui.personaldictionary
+package com.android.inputmethod.usecases
 
 import io.reactivex.Observable
 import no.divvun.dictionary.personal.DictionaryWord

@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
-import com.android.inputmethod.ui.personaldictionary.DictionaryUseCase
+import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordEvent
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewHolder
 import com.android.inputmethod.ui.personaldictionary.word.WordNavArg
+import com.android.inputmethod.usecases.RemoveWordUseCase
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

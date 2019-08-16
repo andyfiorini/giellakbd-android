@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
-import com.android.inputmethod.ui.personaldictionary.WordContextUseCase
+import com.android.inputmethod.usecases.WordContextUseCase
 import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextViewHolder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

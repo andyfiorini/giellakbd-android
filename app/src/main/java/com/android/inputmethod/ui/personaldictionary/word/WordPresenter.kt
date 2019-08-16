@@ -1,6 +1,6 @@
 package com.android.inputmethod.ui.personaldictionary.word
 
-import com.android.inputmethod.ui.personaldictionary.WordContextUseCase
+import com.android.inputmethod.usecases.WordContextUseCase
 import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextViewState
 import io.reactivex.Observable
 
