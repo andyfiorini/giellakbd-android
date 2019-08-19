@@ -1,12 +1,16 @@
 package com.android.inputmethod.ui.personaldictionary.upload
 
-import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewState
-import com.android.inputmethod.usecases.DictionaryUseCase
-import com.android.inputmethod.usecases.RemoveWordUseCase
+import android.util.Log
+import com.android.inputmethod.usecases.JsonDictionaryUseCase
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import timber.log.Timber
 
-class UploadPresenter(private val view: UploadView, private val useCase: DictionaryUseCase) {
+class UploadPresenter(private val view: UploadView, private val useCase: JsonDictionaryUseCase) {
+
+    private val initialViewState = UploadViewState(
+            0
+    )
 
     fun start(): Observable<UploadViewState> {
         val disposable = view.events()
@@ -14,17 +18,16 @@ class UploadPresenter(private val view: UploadView, private val useCase: Diction
                 .subscribe {
                     when (it) {
                         is UploadEvent.OnUploadPressed -> {
+                            useCase.execute().subscribe { dictionary ->
+                                Log.d("UploadPresenter", "DictionaryJson: $dictionary")
+                                Timber.d("DictionaryJson: $dictionary")
+                            }
                         }
                     }
                 }
 
-        return useCase.execute()
+        return Observable.just(initialViewState)
                 .doOnDispose { disposable.dispose() }
-                .map {
-                    UploadViewState(
-                            0
-                    )
-                }
     }
 
 }

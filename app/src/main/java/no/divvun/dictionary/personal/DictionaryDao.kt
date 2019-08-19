@@ -28,11 +28,14 @@ interface DictionaryDao {
     @Query("DELETE FROM Dictionary WHERE id = :wordId")
     fun removeWord(wordId: Long): Int
 
+    @Update
+    fun updateWord(word: DictionaryWord): Int
+
     @Transaction
     fun insertContext(word: String, wordContext: WordContext): Long {
         val dictionaryWord = findWord(word).firstOrNull() ?: return 0
-        wordContext.wordId = dictionaryWord.wordId
-        return insertContext(wordContext)
+        val wC = wordContext.copy(wordId = dictionaryWord.wordId)
+        return insertContext(wC)
     }
 
     @Query("SELECT * FROM WordContext WHERE word_id = :wordId")
@@ -44,8 +47,19 @@ interface DictionaryDao {
     @Delete
     fun removeContext(wordContext: WordContext): Int
 
-    /**
-    @@Transaction
-    fun findContext(wordContext: WordContext): Flowable<List<WordContext>>
-     */
+    @Transaction
+    fun incWord(word: String): Int {
+        val dictionaryWord = findWord(word).firstOrNull() ?: return 0
+        return updateWord(dictionaryWord.copy(typeCount = dictionaryWord.typeCount.inc()))
+    }
+
+    @Transaction
+    fun decWord(word: String): Int {
+        val dictionaryWord = findWord(word).firstOrNull() ?: return 0
+        return updateWord(dictionaryWord.copy(typeCount = dictionaryWord.typeCount.dec()))
+    }
+
+    @Transaction @Query("SELECT * FROM Dictionary")
+    fun dictionaryWithContexts(): Observable<List<DictionaryWordWithContext>>
+
 }

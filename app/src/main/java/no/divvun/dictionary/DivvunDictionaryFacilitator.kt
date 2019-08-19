@@ -20,7 +20,7 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
     private val tag = createTag(this)
     private var isActive = false
 
-    private var dictionary = DivvunDictionary(null,null)
+    private var dictionary = DivvunDictionary(null, null)
     private lateinit var personalDictionary: PersonalDictionary
 
     // STUB
@@ -123,16 +123,16 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
     override fun addToUserHistory(suggestion: String?, wasAutoCapitalized: Boolean, ngramContext: NgramContext, timeStampInSeconds: Long, blockPotentiallyOffensive: Boolean) {
         Log.d(tag, "addToUserHistory")
         suggestion?.let {
-            if(!dictionary.isInDictionary(suggestion)){
+            if (!dictionary.isInDictionary(suggestion)) {
                 Log.d(tag, "Adding non known word: $suggestion")
                 personalDictionary.addWord(suggestion)
             }
         }
 
-        val prevWord = ngramContext.getNthPrevWord(1).toString()
-
-        if(personalDictionary.isInDictionary(prevWord)){
-            personalDictionary.updateContext(ngramContext, suggestion)
+        ngramContext.getNthPrevWord(1)?.let {
+            if (personalDictionary.isInDictionary(it.toString())) {
+                personalDictionary.updateContext(ngramContext, suggestion)
+            }
         }
     }
 

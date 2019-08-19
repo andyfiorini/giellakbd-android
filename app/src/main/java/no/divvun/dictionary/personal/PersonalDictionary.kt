@@ -50,6 +50,8 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
     fun addWord(word: String) {
         if (isInDictionary(word)) {
             Log.d("PersonalDict", "$word already in personal dictionary")
+            val ret = database.dictionaryDao().incWord(word)
+            Log.d("PersonalDict", "Return $ret")
             return
         }
 
@@ -65,8 +67,14 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
     }
 
     fun undoWord(word: String) {
-        Log.d("PersonalDict", "$word is no longer candidate")
-        database.candidatesDao().removeCandidate(word)
+        if (isInDictionary(word)) {
+            Log.d("PersonalDict", "$word already in personal dictionary")
+            database.dictionaryDao().decWord(word)
+        } else {
+            Log.d("PersonalDict", "$word is no longer candidate")
+            database.candidatesDao().removeCandidate(word)
+        }
+
     }
 
     fun updateContext(ngramContext: NgramContext, nextWord: String?) {
