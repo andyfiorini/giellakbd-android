@@ -15,7 +15,7 @@ data class Candidate(
         indices = [Index("word", unique = true)])
 data class DictionaryWord(
         val word: String = "",
-        val typeCount: Long = 0,
+        val typeCount: Long = 2,
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "id")
         val wordId: Long = 0
