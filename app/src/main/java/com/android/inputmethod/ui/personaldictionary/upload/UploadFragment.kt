@@ -1,13 +1,14 @@
 package com.android.inputmethod.ui.personaldictionary.upload
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.usecases.UploadUseCase
 import com.jakewharton.rxbinding3.view.clicks
@@ -23,7 +24,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class UploadFragment : Fragment(), UploadView {
     override fun navigateToSuccess() {
-        Log.d("UploadFragment", "Navigate to success screen!")
+        // Ugly hack to not move whole presenter to UI thread.
+        activity?.runOnUiThread {
+            Toast.makeText(context, getString(R.string.dictionary_upload_success), Toast.LENGTH_SHORT).show()
+            findNavController().navigate(UploadFragmentDirections.actionUploadFragmentToDictionaryFragment())
+        }
     }
 
     private lateinit var disposable: Disposable

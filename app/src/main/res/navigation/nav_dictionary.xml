@@ -28,5 +28,9 @@
     <fragment
         android:id="@+id/uploadFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.upload.UploadFragment"
-        android:label="Upload Dictionary" />
+        android:label="Upload Dictionary" >
+        <action
+            android:id="@+id/action_uploadFragment_to_dictionaryFragment"
+            app:destination="@id/dictionaryFragment" />
+    </fragment>
 </navigation>
