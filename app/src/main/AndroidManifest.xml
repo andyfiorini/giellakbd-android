@@ -22,7 +22,11 @@
         <activity
             android:name="com.android.inputmethod.ui.personaldictionary.PersonalDictionaryActivity"
             android:label="@string/title_activity_personal_dictionary"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
         <!-- Services -->
         <service
             android:name=".LatinIME"

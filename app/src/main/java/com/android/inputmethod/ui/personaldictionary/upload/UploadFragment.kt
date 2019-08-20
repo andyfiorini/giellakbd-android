@@ -1,32 +1,50 @@
 package com.android.inputmethod.ui.personaldictionary.upload
 
 import android.os.Bundle
-import android.view.*
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.android.inputmethod.latin.R
-import com.android.inputmethod.usecases.JsonDictionaryUseCase
-import com.google.gson.Gson
+import com.android.inputmethod.usecases.UploadUseCase
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_personal_upload.*
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
+import no.divvun.service.DivvunDictionaryUploadService
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 
 class UploadFragment : Fragment(), UploadView {
+    override fun navigateToSuccess() {
+        Log.d("UploadFragment", "Navigate to success screen!")
+    }
+
     private lateinit var disposable: Disposable
 
     private lateinit var database: PersonalDictionaryDatabase
-    private lateinit var jsonDictionaryUseCase: JsonDictionaryUseCase
+    private lateinit var uploadUseCase: UploadUseCase
     private lateinit var presenter: UploadPresenter
-    private val gson = Gson()
+    private val retrofit = Retrofit.Builder()
+            .baseUrl(DivvunDictionaryUploadService.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+
+    private val divvunDictionaryUploadService = retrofit.create(DivvunDictionaryUploadService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = PersonalDictionaryDatabase.getInstance(context!!)
 
-        jsonDictionaryUseCase = JsonDictionaryUseCase(database, gson)
-        presenter = UploadPresenter(this, jsonDictionaryUseCase)
+        uploadUseCase = UploadUseCase(database, divvunDictionaryUploadService)
+        presenter = UploadPresenter(this, uploadUseCase)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -45,6 +63,11 @@ class UploadFragment : Fragment(), UploadView {
     }
 
     override fun render(viewState: UploadViewState) {
+        b_upload_upload.isEnabled = viewState.uploadEnabled
+        tv_upload_error.text = viewState.errorMessage
+        tv_upload_error.isGone = viewState.errorMessage == null
+
+        pb_upload_loading.isVisible = viewState.loading
     }
 
     override fun events(): Observable<UploadEvent> {

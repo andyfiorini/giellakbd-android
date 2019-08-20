@@ -5,5 +5,6 @@ import io.reactivex.Observable
 interface UploadView {
     fun render(viewState: UploadViewState)
     fun events(): Observable<UploadEvent>
+    fun navigateToSuccess()
 }
 

@@ -1,7 +1,5 @@
 package no.divvun.domain
 
-import no.divvun.dictionary.personal.WordContext
-
 data class DictionaryJson(
     val words: List<WordJson>
 )

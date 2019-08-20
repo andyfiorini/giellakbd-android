@@ -1,20 +1,21 @@
 package com.android.inputmethod.usecases
 
-import com.google.gson.Gson
+import no.divvun.service.DivvunDictionaryUploadService
 import io.reactivex.Single
-import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 import no.divvun.dictionary.personal.DictionaryWordWithContext
+import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 import no.divvun.domain.DictionaryJson
 import no.divvun.domain.WordContextJson
 import no.divvun.domain.WordJson
 
-class JsonDictionaryUseCase(private val database: PersonalDictionaryDatabase, private val gson: Gson) {
-    fun execute(): Single<String> {
+class UploadUseCase(private val database: PersonalDictionaryDatabase, private val divvunDictionaryUploadService: DivvunDictionaryUploadService) {
+    fun execute(): Single<DictionaryJson> {
         return database.dictionaryDao().dictionaryWithContexts()
                 .take(1)
                 .singleOrError()
                 .map(mapper)
-                .map { gson.toJson(it) }
+                .flatMap { divvunDictionaryUploadService.uploadDictionary(it) }
+
     }
 }
 
@@ -26,5 +27,4 @@ val mapper: (List<DictionaryWordWithContext>) -> DictionaryJson = { dictionary -
                             WordContextJson(it.prevWord, it.nextWord)
                         })
             })
-
 }
