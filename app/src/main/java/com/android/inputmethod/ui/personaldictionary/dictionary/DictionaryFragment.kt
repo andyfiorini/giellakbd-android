@@ -2,20 +2,22 @@ package com.android.inputmethod.ui.personaldictionary.dictionary
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
-import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordEvent
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewHolder
 import com.android.inputmethod.ui.personaldictionary.word.WordNavArg
+import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.usecases.RemoveWordUseCase
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.fragment_personal_dictionary.*
 import kotlinx.android.synthetic.main.fragment_personal_dictionary.view.*
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
@@ -73,6 +75,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
 
     override fun render(viewState: DictionaryViewState) {
         adapter.update(viewState.dictionary)
+        tv_personaldict_empty.isVisible = viewState.dictionary.isEmpty()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -81,7 +84,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.fragment_upload -> {
                 navigateToUploadDictionary()
             }
@@ -95,7 +98,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
                 is DictionaryWordEvent.OnClickPressEvent -> {
                     DictionaryEvent.OnWordSelected(it.wordId)
                 }
-                is DictionaryWordEvent.OnClickRemoveEvent ->{
+                is DictionaryWordEvent.OnClickRemoveEvent -> {
                     DictionaryEvent.OnRemoveEvent(it.wordId)
                 }
             }

@@ -4,6 +4,4 @@ import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.Dictiona
 
 data class DictionaryViewState(
         val dictionary: List<DictionaryWordViewState>
-) {
-
-}
+)
