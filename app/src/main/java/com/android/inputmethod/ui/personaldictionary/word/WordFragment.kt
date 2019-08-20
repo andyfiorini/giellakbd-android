@@ -18,6 +18,7 @@ import com.android.inputmethod.usecases.WordUseCase
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.fragment_word.*
 import kotlinx.android.synthetic.main.fragment_word.view.*
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
@@ -73,6 +74,8 @@ class WordFragment : Fragment(), WordView {
     override fun render(viewState: WordViewState) {
         Log.d("WordFragment", "Rendering: $viewState")
         (activity as (AppCompatActivity?))?.supportActionBar?.title = viewState.word
+        tv_persondict_word.text = viewState.word
+        tv_persondict_typecount.text = viewState.typeCount.toString()
         adapter.update(viewState.contexts)
     }
 }
