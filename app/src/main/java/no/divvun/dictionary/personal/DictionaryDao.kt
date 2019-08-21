@@ -13,9 +13,6 @@ interface DictionaryDao {
     @Query("SELECT * FROM Dictionary")
     fun dictionaryO(): Observable<List<DictionaryWord>>
 
-    @Query("SELECT * FROM Dictionary WHERE word=:word")
-    fun isInDictionary(word: String): Boolean
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertWord(word: DictionaryWord): Long
 

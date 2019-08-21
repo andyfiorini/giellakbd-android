@@ -44,7 +44,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
     }
 
     override fun isInDictionary(word: String): Boolean {
-        return database.dictionaryDao().isInDictionary(word)
+        return database.dictionaryDao().findWord(word).isNotEmpty()
     }
 
     fun addWord(word: String) {
