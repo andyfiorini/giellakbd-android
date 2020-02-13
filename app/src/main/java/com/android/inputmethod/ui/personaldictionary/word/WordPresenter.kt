@@ -9,13 +9,13 @@ import no.divvun.dictionary.personal.WordWithContext
 
 class WordPresenter(private val wordId: Long, private val wordContextUseCase: WordContextUseCase) {
 
-    private val initalViewState = WordViewState(emptyList())
+    private val initialViewState = WordViewState(emptyList())
 
     fun start(): Observable<WordViewState> {
         return wordContextUseCase.execute(wordId)
                 .compose(wordContextTransformer)
                 .map { WordViewState(it) }
-                .startWith(initalViewState)
+                .startWith(initialViewState)
     }
 
 }
