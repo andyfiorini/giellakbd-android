@@ -10,7 +10,7 @@ buildscript {
         rxKotlinVersion = '2.3.0'
         navigationVersion='2.2.0-alpha01'
         ktxVersion = '1.2.0-alpha03'
-        archRoomVersion = '2.2.0-alpha02'
+        archRoomVersion = '2.2.3'
     }
 
     repositories {
