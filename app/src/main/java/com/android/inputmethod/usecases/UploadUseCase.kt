@@ -2,7 +2,7 @@ package com.android.inputmethod.usecases
 
 import no.divvun.service.DivvunDictionaryUploadService
 import io.reactivex.Single
-import no.divvun.dictionary.personal.DictionaryWordWithContext
+import no.divvun.dictionary.personal.WordWithContext
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 import no.divvun.domain.DictionaryJson
 import no.divvun.domain.WordContextJson
@@ -19,7 +19,7 @@ class UploadUseCase(private val database: PersonalDictionaryDatabase, private va
     }
 }
 
-val mapper: (List<DictionaryWordWithContext>) -> DictionaryJson = { dictionary ->
+val mapper: (List<WordWithContext>) -> DictionaryJson = { dictionary ->
     DictionaryJson(
             dictionary.map { wordWithContext ->
                 WordJson(wordWithContext.dictionaryWord.word, wordWithContext.dictionaryWord.typeCount,

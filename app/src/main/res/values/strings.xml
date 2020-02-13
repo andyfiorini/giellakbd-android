@@ -583,4 +583,5 @@ Tip: You can download and remove dictionaries by going to &lt;b>Languages&#160;&
     <string name="delete_word">Delete word</string>
     <string name="dictionary_upload_success">Dictionary upload successful</string>
     <string name="personaldictionary_empty_hint">Personal dictionary is empty...</string>
+    <string name="fragment_title_word">Contexts for \"{word}\"</string>
 </resources>

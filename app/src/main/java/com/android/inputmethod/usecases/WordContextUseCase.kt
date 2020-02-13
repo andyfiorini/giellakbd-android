@@ -1,14 +1,13 @@
 package com.android.inputmethod.usecases
 
 import io.reactivex.Observable
+import no.divvun.dictionary.personal.WordWithContext
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
-import no.divvun.dictionary.personal.WordContext
 
 class WordContextUseCase(private val database: PersonalDictionaryDatabase) {
 
-    fun execute(wordId: Long): Observable<List<WordContext>> {
+    fun execute(wordId: Long): Observable<WordWithContext> {
         return database.dictionaryDao()
-                .wordContexts(wordId)
-                .toObservable()
+                .wordWithContext(wordId)
     }
 }

@@ -1,49 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_persondict_wordcontainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:padding="32dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tv_persondict_word"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="48sp"
-                tools:text="Word" />
-
-            <TextView
-                android:id="@+id/tv_persondict_typecount"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:textSize="32sp" />
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+    android:layout_height="match_parent"
+    >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_personaldict_wordcontext"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cv_persondict_wordcontainer"
+        android:layout_height="match_parent"
         tools:itemCount="15"
-        tools:listitem="@layout/dictionary_item_context" />
+        tools:listitem="@layout/dictionary_item_context"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

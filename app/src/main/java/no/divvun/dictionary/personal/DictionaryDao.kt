@@ -1,6 +1,5 @@
 package no.divvun.dictionary.personal
 
-import android.util.Log
 import androidx.room.*
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -57,6 +56,9 @@ interface DictionaryDao {
     }
 
     @Transaction @Query("SELECT * FROM Dictionary")
-    fun dictionaryWithContexts(): Observable<List<DictionaryWordWithContext>>
+    fun dictionaryWithContexts(): Observable<List<WordWithContext>>
+
+    @Transaction @Query("SELECT * FROM Dictionary WHERE id = :wordId")
+    fun wordWithContext(wordId: Long): Observable<WordWithContext>
 
 }

@@ -63,9 +63,9 @@ class DictionaryFragment : Fragment(), DictionaryView {
         disposable.dispose()
     }
 
-    override fun navigateToWordFragment(wordId: Long) {
+    override fun navigateToWordFragment(wordId: Long, word: String) {
         findNavController().navigate(
-                DictionaryFragmentDirections.actionDictionaryFragmentToWordFragment(WordNavArg(wordId))
+                DictionaryFragmentDirections.actionDictionaryFragmentToWordFragment(word, WordNavArg(wordId, word))
         )
     }
 
@@ -96,7 +96,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
         return adapter.events().map {
             when (it) {
                 is DictionaryWordEvent.OnClickPressEvent -> {
-                    DictionaryEvent.OnWordSelected(it.wordId)
+                    DictionaryEvent.OnWordSelected(it.wordId, it.word)
                 }
                 is DictionaryWordEvent.OnClickRemoveEvent -> {
                     DictionaryEvent.OnRemoveEvent(it.wordId)

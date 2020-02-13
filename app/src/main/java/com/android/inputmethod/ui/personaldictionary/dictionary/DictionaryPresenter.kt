@@ -14,7 +14,7 @@ class DictionaryPresenter(private val view: DictionaryView, private val useCase:
                 .subscribe {
                     when (it) {
                         is DictionaryEvent.OnWordSelected -> {
-                            view.navigateToWordFragment(it.wordId)
+                            view.navigateToWordFragment(it.wordId, it.word)
                         }
                         is DictionaryEvent.OnRemoveEvent -> {
                             removeWordUseCase.execute(it.wordId)

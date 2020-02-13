@@ -4,8 +4,9 @@ import com.android.inputmethod.ui.components.recycleradapter.Diffable
 
 data class WordContextViewState(
         val wordContextId: Long,
-        val prevWord: String?,
-        val nextWord: String?
+        val word: String,
+        val prevWords: String?,
+        val nextWords: String?
 ) : Diffable {
     override fun isSameAs(other: Diffable): Boolean {
         if(other is WordContextViewState){

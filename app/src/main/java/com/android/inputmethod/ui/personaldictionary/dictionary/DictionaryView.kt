@@ -6,7 +6,7 @@ interface DictionaryView {
     fun render(viewState: DictionaryViewState)
     fun events(): Observable<DictionaryEvent>
 
-    fun navigateToWordFragment(wordId: Long)
+    fun navigateToWordFragment(wordId: Long, word: String)
     fun navigateToUploadDictionary()
 }
 

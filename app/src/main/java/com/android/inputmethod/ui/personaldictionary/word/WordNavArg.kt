@@ -5,5 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class WordNavArg(
-        val wordId: Long
-): Parcelable
+        val wordId: Long,
+        val word: String
+) : Parcelable

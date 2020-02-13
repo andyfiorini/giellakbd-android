@@ -20,7 +20,10 @@
     <fragment
         android:id="@+id/wordFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.word.WordFragment"
-        android:label="" >
+        android:label="@string/fragment_title_word" >
+        <argument
+            android:name="word"
+            app:argType="string"/>
         <argument
             android:name="wordNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.word.WordNavArg" />

@@ -1,6 +1,5 @@
 package com.android.inputmethod.ui.personaldictionary.upload
 
-import android.util.Log
 import com.android.inputmethod.usecases.UploadUseCase
 import io.reactivex.Observable
 
@@ -16,8 +15,6 @@ class UploadPresenter(private val view: UploadView, private val useCase: UploadU
         return view.events().flatMap { event ->
             when (event) {
                 is UploadEvent.OnUploadPressed -> {
-
-                    Log.d("UploadPresenter", "Upload was pressed!")
                     Observable.concat(
                             Observable.just(UploadUpdate.UploadStarted),
                             useCase.execute().toObservable().map {

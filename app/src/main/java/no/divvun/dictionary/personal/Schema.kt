@@ -40,7 +40,7 @@ data class WordContext(
         val wordContextId: Long = 0
 )
 
-data class DictionaryWordWithContext(
+data class WordWithContext(
         @Embedded
         var dictionaryWord: DictionaryWord = DictionaryWord(),
 
