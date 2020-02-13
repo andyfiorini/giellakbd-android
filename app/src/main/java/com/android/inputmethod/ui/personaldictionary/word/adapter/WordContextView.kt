@@ -25,11 +25,11 @@ class WordContextView(context: Context, attr: AttributeSet?, style: Int) : Const
     fun update(viewState: WordContextViewState) {
         this.viewState = viewState
         val text = buildSpannedString {
-            append(viewState.prevWords)
+            append(viewState.prevWords.joinToString(" "))
             bold {
                 append(" ${viewState.word} ")
             }
-            append(viewState.nextWords)
+            append(viewState.nextWords.joinToString(" "))
         }
         tv_dictitem_context.text = text
     }

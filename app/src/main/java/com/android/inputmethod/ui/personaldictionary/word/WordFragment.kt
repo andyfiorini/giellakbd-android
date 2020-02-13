@@ -1,11 +1,10 @@
 package com.android.inputmethod.ui.personaldictionary.word
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +20,6 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_word.*
 import kotlinx.android.synthetic.main.fragment_word.view.*
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
-import timber.log.Timber
 
 class WordFragment : Fragment(), WordView {
 
@@ -50,7 +48,7 @@ class WordFragment : Fragment(), WordView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_word, container, false)
 
-        rvDictionary = view.rv_personaldict_wordcontext
+        rvDictionary = view.rv_word_wordcontexts
         rvDictionary.layoutManager = LinearLayoutManager(context!!)
         rvDictionary.adapter = adapter
 
@@ -74,6 +72,8 @@ class WordFragment : Fragment(), WordView {
 
     override fun render(viewState: WordViewState) {
         adapter.update(viewState.contexts)
+        tv_word_empty.isVisible = viewState.contexts.isEmpty()
+
     }
 }
 

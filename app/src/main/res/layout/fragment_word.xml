@@ -8,10 +8,24 @@
     >
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_personaldict_wordcontext"
+        android:id="@+id/rv_word_wordcontexts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:itemCount="15"
         tools:listitem="@layout/dictionary_item_context"
         />
+
+    <TextView
+        android:id="@+id/tv_word_empty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:alpha="0.5"
+        android:gravity="center"
+        android:text="@string/wordcontexts_empty_hint"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

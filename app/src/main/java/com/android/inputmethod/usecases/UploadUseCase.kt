@@ -24,7 +24,7 @@ val mapper: (List<WordWithContext>) -> DictionaryJson = { dictionary ->
             dictionary.map { wordWithContext ->
                 WordJson(wordWithContext.dictionaryWord.word, wordWithContext.dictionaryWord.typeCount,
                         wordWithContext.contexts.map {
-                            WordContextJson(it.prevWord, it.nextWord)
+                            WordContextJson(it.prevWords, it.nextWords)
                         })
             })
 }

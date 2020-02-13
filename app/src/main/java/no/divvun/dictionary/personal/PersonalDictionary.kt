@@ -77,11 +77,13 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
 
     }
 
-    fun updateContext(ngramContext: NgramContext, nextWord: String?) {
+    fun updateContext(ngramContext: NgramContext, nextWords: List<String>) {
         val word = ngramContext.getNthPrevWord(1)
         if (word != null && isInDictionary(word.toString())) {
-            val prevWord = ngramContext.getNthPrevWord(2)?.toString()
-            database.dictionaryDao().insertContext(word.toString(), WordContext(prevWord, nextWord))
+            val prevWord2 = ngramContext.getNthPrevWord(2)?.toString()
+            val prevWord3 = ngramContext.getNthPrevWord(3)?.toString()
+            val prevWords = listOfNotNull(prevWord2, prevWord3)
+            database.dictionaryDao().insertContext(word.toString(), WordContext(prevWords, nextWords))
         }
     }
 }

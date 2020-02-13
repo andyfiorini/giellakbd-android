@@ -27,8 +27,8 @@ val wordContextTransformer: ObservableTransformer<WordWithContext, List<WordCont
                     WordContextViewState(
                             it.wordContextId,
                             wordWithContext.dictionaryWord.word,
-                            it.prevWord,
-                            it.nextWord)
+                            it.prevWords,
+                            it.nextWords)
                 }
             }
         }

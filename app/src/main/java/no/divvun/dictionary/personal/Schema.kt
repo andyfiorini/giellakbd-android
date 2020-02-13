@@ -1,6 +1,11 @@
 package no.divvun.dictionary.personal
 
 import androidx.room.*
+import com.google.gson.reflect.TypeToken
+
+import com.google.gson.Gson
+import java.lang.reflect.Type
+
 
 typealias Dictionary = List<DictionaryWord>
 
@@ -29,16 +34,17 @@ data class DictionaryWord(
                     onDelete = ForeignKey.CASCADE)],
         indices = [Index("word_id")]
 )
-
+@TypeConverters(ListOfStringsTypeConverters::class)
 data class WordContext(
-        val prevWord: String? = null,
-        val nextWord: String? = null,
+        val prevWords: List<String> = emptyList(),
+        val nextWords: List<String> = emptyList(),
         @ColumnInfo(name = "word_id")
         val wordId: Long = 0,
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "word_context_id")
         val wordContextId: Long = 0
 )
+
 
 data class WordWithContext(
         @Embedded
@@ -47,3 +53,19 @@ data class WordWithContext(
         @Relation(parentColumn = "id", entityColumn = "word_id", entity = WordContext::class)
         var contexts: List<WordContext> = emptyList()
 )
+
+class ListOfStringsTypeConverters {
+    @TypeConverter
+    fun stringToListOfString(json: String): List<String> {
+        val gson = Gson()
+        val type: Type = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson<List<String>>(json, type)
+    }
+
+    @TypeConverter
+    fun listOfStringToString(list: List<String>): String {
+        val gson = Gson()
+        val type: Type = object : TypeToken<List<String>>() {}.type
+        return gson.toJson(list, type)
+    }
+}

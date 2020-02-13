@@ -11,6 +11,6 @@ data class WordJson(
 )
 
 data class WordContextJson(
-        val prevWord: String?,
-        val nextWord: String?
+        val prevWords: List<String>,
+        val nextWords: List<String>
 )
