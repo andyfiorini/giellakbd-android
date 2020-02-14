@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
@@ -72,7 +73,7 @@ class WordFragment : Fragment(), WordView {
 
     override fun render(viewState: WordViewState) {
         adapter.update(viewState.contexts)
-        tv_word_empty.isVisible = viewState.contexts.isEmpty()
+        g_word_empty.isInvisible = viewState.contexts.isNotEmpty()
 
     }
 }

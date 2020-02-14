@@ -2,6 +2,7 @@ package com.android.inputmethod.ui.personaldictionary.dictionary
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -75,7 +76,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
 
     override fun render(viewState: DictionaryViewState) {
         adapter.update(viewState.dictionary)
-        tv_personaldict_empty.isVisible = viewState.dictionary.isEmpty()
+        g_personaldict_empty.isInvisible = viewState.dictionary.isNotEmpty()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

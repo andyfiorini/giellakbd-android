@@ -12,6 +12,7 @@ import com.android.inputmethod.latin.settings.SettingsValuesForSuggestion
 import com.android.inputmethod.latin.utils.SuggestionResults
 import no.divvun.createTag
 import no.divvun.dictionary.personal.PersonalDictionary
+import timber.log.Timber
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit

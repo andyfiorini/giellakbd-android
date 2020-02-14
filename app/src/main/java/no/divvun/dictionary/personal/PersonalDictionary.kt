@@ -32,7 +32,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
                 .sortedBy { it.second }
                 .take(5).toList()
 
-        Log.d("PersonalDictionary", scoreMap.toString())
+        Log.d("PersonalDictionary", "composedData $composedData")
 
         val results = scoreMap.map { (suggestion, levenshteinScore) ->
             SuggestedWordInfo(suggestion, ngramContext.extractPrevWordsContext(),
