@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_dictionaryFragment_to_uploadFragment"
             app:destination="@id/uploadFragment" />
+        <action
+            android:id="@+id/action_dictionaryFragment_to_addWordDialogFragment"
+            app:destination="@id/addWordDialogFragment" />
     </fragment>
 
     <fragment
@@ -36,4 +39,8 @@
             android:id="@+id/action_uploadFragment_to_dictionaryFragment"
             app:destination="@id/dictionaryFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/addWordDialogFragment"
+        android:name="com.android.inputmethod.ui.personaldictionary.AddWordDialogFragment"
+        android:label="AddWordDialogFragment" />
 </navigation>

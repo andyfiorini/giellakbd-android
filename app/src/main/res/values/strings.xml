@@ -585,4 +585,5 @@ Tip: You can download and remove dictionaries by going to &lt;b>Languages&#160;&
     <string name="personaldictionary_empty_hint">Personal dictionary is empty…</string>
     <string name="wordcontexts_empty_hint">No recorded word contexts…</string>
     <string name="fragment_title_word">Contexts for \"{word}\"</string>
+    <string name="add_word_dialog_title">Add word</string>
 </resources>

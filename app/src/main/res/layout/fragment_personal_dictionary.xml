@@ -47,9 +47,20 @@
     <androidx.constraintlayout.widget.Group
         android:id="@+id/g_personaldict_empty"
         android:layout_width="wrap_content"
-        android:visibility="invisible"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:constraint_referenced_ids="iv_personaldict_empty,tv_personaldict_empty"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_personaldict_addword"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/vd_add"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

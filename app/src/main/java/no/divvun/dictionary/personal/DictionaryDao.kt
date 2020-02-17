@@ -3,6 +3,7 @@ package no.divvun.dictionary.personal
 import androidx.room.*
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
 
 @Dao
 interface DictionaryDao {
@@ -17,6 +18,9 @@ interface DictionaryDao {
 
     @Query("SELECT * FROM Dictionary WHERE word = :word")
     fun findWord(word: String): Array<DictionaryWord>
+
+    @Query("SELECT * FROM Dictionary WHERE word = :word")
+    fun findWordByString(word: String): Single<List<DictionaryWord>>
 
     @Query("SELECT * FROM Dictionary WHERE id = :wordId")
     fun findWord(wordId: Long): Observable<DictionaryWord>

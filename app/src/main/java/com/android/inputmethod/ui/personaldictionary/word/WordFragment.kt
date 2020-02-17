@@ -1,6 +1,7 @@
 package com.android.inputmethod.ui.personaldictionary.word
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +20,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_word.*
-import kotlinx.android.synthetic.main.fragment_word.view.*
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
 class WordFragment : Fragment(), WordView {
@@ -46,14 +46,14 @@ class WordFragment : Fragment(), WordView {
         presenter = WordPresenter(args.wordNavArg.wordId, wordContextUseCase)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_word, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_word, container, false)
 
-        rvDictionary = view.rv_word_wordcontexts
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        rvDictionary = rv_word_wordcontexts
         rvDictionary.layoutManager = LinearLayoutManager(context!!)
         rvDictionary.adapter = adapter
-
-        return view
     }
 
     override fun onResume() {
@@ -74,6 +74,7 @@ class WordFragment : Fragment(), WordView {
     override fun render(viewState: WordViewState) {
         adapter.update(viewState.contexts)
         g_word_empty.isInvisible = viewState.contexts.isNotEmpty()
+        g_word_empty.requestLayout()
 
     }
 }

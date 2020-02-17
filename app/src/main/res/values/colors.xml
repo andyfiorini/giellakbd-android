@@ -25,7 +25,7 @@
     <color name="primaryDarkColor">#0091c0</color>
     <color name="primaryTextColor">#000000</color>
 
-    <color name="accentColor">#4DB6AC</color>
+    <color name="colorSecondary">#4bc1f3</color>
 
 
     <!-- android:color/holo_blue_light value is #FF33B5E5 -->

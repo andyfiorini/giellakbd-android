@@ -1,5 +1,6 @@
 package com.android.inputmethod.ui.personaldictionary.word
 
+import android.util.Log
 import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextViewState
 import com.android.inputmethod.usecases.WordContextUseCase
 import io.reactivex.Observable
@@ -16,6 +17,7 @@ class WordPresenter(private val wordId: Long, private val wordContextUseCase: Wo
                 .compose(wordContextTransformer)
                 .map { WordViewState(it) }
                 .startWith(initialViewState)
+                .doOnNext { Log.d("WordPresenter", it.toString()) }
     }
 
 }
