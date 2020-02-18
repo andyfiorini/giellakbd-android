@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_dictionary.xml"
     app:startDestination="@id/dictionaryFragment">
 
     <fragment
         android:id="@+id/dictionaryFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.dictionary.DictionaryFragment"
-        android:label="@string/fragment_title_personal_dictionary" >
+        android:label="@string/fragment_title_personal_dictionary">
         <action
             android:id="@+id/action_dictionaryFragment_to_wordFragment"
             app:destination="@id/wordFragment" />
@@ -23,10 +22,10 @@
     <fragment
         android:id="@+id/wordFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.word.WordFragment"
-        android:label="@string/fragment_title_word" >
+        android:label="@string/fragment_title_word">
         <argument
             android:name="word"
-            app:argType="string"/>
+            app:argType="string" />
         <argument
             android:name="wordNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.word.WordNavArg" />
@@ -34,13 +33,13 @@
     <fragment
         android:id="@+id/uploadFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.upload.UploadFragment"
-        android:label="Upload Dictionary" >
+        android:label="Upload Dictionary">
         <action
             android:id="@+id/action_uploadFragment_to_dictionaryFragment"
             app:destination="@id/dictionaryFragment" />
     </fragment>
-    <fragment
+    <dialog
         android:id="@+id/addWordDialogFragment"
-        android:name="com.android.inputmethod.ui.personaldictionary.AddWordDialogFragment"
+        android:name="com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogFragment"
         android:label="AddWordDialogFragment" />
 </navigation>
