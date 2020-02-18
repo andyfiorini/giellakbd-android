@@ -1,6 +1,7 @@
 package no.divvun.dictionary.personal
 
 import androidx.room.*
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -13,8 +14,8 @@ interface DictionaryDao {
     @Query("SELECT * FROM Dictionary")
     fun dictionaryO(): Observable<List<DictionaryWord>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertWord(word: DictionaryWord): Long
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    fun insertWord(word: DictionaryWord): Completable
 
     @Query("SELECT * FROM Dictionary WHERE word = :word")
     fun findWord(word: String): Array<DictionaryWord>

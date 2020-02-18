@@ -59,7 +59,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
             Log.d("PersonalDict", "$word was candidate, now in personal dictionary")
             // Word is already candidate, second time typed. Time to add to personal dictionary.
             database.candidatesDao().removeCandidate(word)
-            database.dictionaryDao().insertWord(DictionaryWord(word))
+            database.dictionaryDao().insertWord(DictionaryWord(word)).subscribe()
         } else {
             Log.d("PersonalDict", "$word is new candidate")
             database.candidatesDao().insertCandidate(Candidate(word))
