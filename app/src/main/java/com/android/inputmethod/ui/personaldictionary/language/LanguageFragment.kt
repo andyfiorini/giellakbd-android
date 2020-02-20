@@ -83,7 +83,7 @@ class LanguageFragment : Fragment(), LanguageView {
         return adapter.events().map {
             when (it) {
                 is LanguageWordEvent.PressEvent -> {
-                    LanguageEvent.OnLanguageSelected(it.languageId)
+                    LanguageEvent.OnLanguageSelected(it.languageId, it.language)
                 }
                 is LanguageWordEvent.RemoveEvent -> {
                     LanguageEvent.OnRemoveEvent(it.languageId)
@@ -92,7 +92,7 @@ class LanguageFragment : Fragment(), LanguageView {
         }
     }
 
-    override fun navigateToDictionary(languageId: Long) {
-        findNavController().navigate(LanguageFragmentDirections.actionLanguageFragmentToDictionaryFragment(DictionaryNavArg(languageId)))
+    override fun navigateToDictionary(languageId: Long, language: String) {
+        findNavController().navigate(LanguageFragmentDirections.actionLanguageFragmentToDictionaryFragment(DictionaryNavArg(languageId), language))
     }
 }

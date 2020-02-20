@@ -6,6 +6,6 @@ interface LanguageView {
     fun render(viewState: LanguageViewState)
     fun events(): Observable<LanguageEvent>
 
-    fun navigateToDictionary(languageId: Long)
+    fun navigateToDictionary(languageId: Long, language: String)
 }
 

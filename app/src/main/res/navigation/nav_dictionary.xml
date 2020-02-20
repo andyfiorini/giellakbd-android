@@ -3,11 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_dictionary.xml"
     app:startDestination="@id/languageFragment">
+    <fragment
+        android:id="@+id/languageFragment"
+        android:name="com.android.inputmethod.ui.personaldictionary.language.LanguageFragment"
+        android:label="@string/personal_dictionary_title">
+        <action
+            android:id="@+id/action_languageFragment_to_dictionaryFragment"
+            app:destination="@id/dictionaryFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/dictionaryFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.dictionary.DictionaryFragment"
-        android:label="@string/fragment_title_personal_dictionary">
+        android:label="{language}">
         <action
             android:id="@+id/action_dictionaryFragment_to_wordFragment"
             app:destination="@id/wordFragment" />
@@ -21,6 +29,9 @@
         <argument
             android:name="dictionaryNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.dictionary.DictionaryNavArg" />
+        <argument
+            android:name="language"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -53,12 +64,4 @@
             android:name="addWordDialogNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg" />
     </dialog>
-    <fragment
-        android:id="@+id/languageFragment"
-        android:name="com.android.inputmethod.ui.personaldictionary.language.LanguageFragment"
-        android:label="Personal Dictionaries">
-        <action
-            android:id="@+id/action_languageFragment_to_dictionaryFragment"
-            app:destination="@id/dictionaryFragment" />
-    </fragment>
 </navigation>

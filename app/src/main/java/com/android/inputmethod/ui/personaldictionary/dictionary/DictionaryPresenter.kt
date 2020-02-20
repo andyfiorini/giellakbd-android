@@ -6,6 +6,7 @@ import com.android.inputmethod.usecases.RemoveWordUseCase
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import no.divvun.dictionary.personal.DictionaryWord
+import java.util.*
 
 class DictionaryPresenter(
         private val view: DictionaryView,
@@ -25,7 +26,7 @@ class DictionaryPresenter(
                         is DictionaryUpdate.Dictionary -> {
                             state.copy(dictionary = event.words.map {
                                 DictionaryWordViewState(it.wordId, it.typeCount, it.word)
-                            })
+                            }.sortedBy { it.word.toLowerCase(Locale.getDefault()) })
                         }
                     }
                 })

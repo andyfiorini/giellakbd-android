@@ -5,6 +5,7 @@ import com.android.inputmethod.usecases.LanguagesUseCase
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import no.divvun.dictionary.personal.Language
+import java.util.*
 
 class LanguagePresenter(
         private val view: LanguageView,
@@ -23,7 +24,7 @@ class LanguagePresenter(
                         is LanguageUpdate.Lang -> {
                             state.copy(languages = event.languages.map {
                                 LanguageWordViewState(it.languageId, it.language, it.country, it.variant)
-                            })
+                            }.sortedBy { it.language.toLowerCase(Locale.getDefault()) })
                         }
                     }
                 })
@@ -35,7 +36,7 @@ class LanguagePresenter(
         it.flatMap { languageEvent ->
             when (languageEvent) {
                 is LanguageEvent.OnLanguageSelected -> {
-                    view.navigateToDictionary(languageEvent.languageId)
+                    view.navigateToDictionary(languageEvent.languageId, languageEvent.language)
                     Observable.empty<LanguageUpdate>()
                 }
                 is LanguageEvent.OnRemoveEvent -> {
