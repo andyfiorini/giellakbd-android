@@ -11,10 +11,12 @@ typealias Dictionary = List<DictionaryWord>
 @Entity(tableName = "Language",
         indices = [Index("language", unique = true)])
 data class Language(
+        val language: String,
+        val country: String = "",
+        val variant: String = "",
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "language_id")
-        val languageId: Long = 0,
-        val language: String
+        val languageId: Long = 0
 )
 
 @Entity(tableName = "Candidates",

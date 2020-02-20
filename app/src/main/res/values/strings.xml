@@ -590,4 +590,5 @@ Tip: You can download and remove dictionaries by going to &lt;b>Languages&#160;&
     <string name="addword_error_contains_space">Word contains space</string>
     <string name="addword_error_empty">Word is empty</string>
     <string name="addword_hint">Add word</string>
+    <string name="personallangionary_empty_hint">No personal languages dictionary have been created yet</string>
 </resources>

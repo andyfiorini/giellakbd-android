@@ -7,13 +7,24 @@ import com.android.inputmethod.latin.NgramContext
 import com.android.inputmethod.latin.SuggestedWords.SuggestedWordInfo
 import com.android.inputmethod.latin.common.ComposedData
 import com.android.inputmethod.latin.settings.SettingsValuesForSuggestion
+import com.android.inputmethod.usecases.CreateLanguageUseCase
 import no.divvun.levenshtein
 import java.util.*
 
-class PersonalDictionary(private val context: Context?, locale: Locale?) : Dictionary(TYPE_USER, locale) {
+class PersonalDictionary(private val context: Context?, locale: Locale) : Dictionary(TYPE_USER, locale) {
 
     private val database: PersonalDictionaryDatabase = PersonalDictionaryDatabase.getInstance(context!!)
-    private val languageId by lazy { database.dictionaryDao().findLanguage(locale!!.toLanguageTag()).first().languageId }
+    private val languageId by lazy {
+        database.dictionaryDao().findLanguage(locale.language, locale.country, locale.variant).first().languageId
+    }
+
+    init {
+        CreateLanguageUseCase(database).execute(locale.toLanguage())
+    }
+
+    private fun Locale.toLanguage(): Language {
+        return Language(language, country, variant)
+    }
 
     override fun getSuggestions(
             composedData: ComposedData,
@@ -84,7 +95,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
             val prevWord2 = ngramContext.getNthPrevWord(2)?.toString()
             val prevWord3 = ngramContext.getNthPrevWord(3)?.toString()
             val prevWords = listOfNotNull(prevWord2, prevWord3)
-            database.dictionaryDao().insertContext(mLocale!!.toLanguageTag(), word.toString(), WordContext(prevWords, nextWords))
+            database.dictionaryDao().insertContext(languageId, word.toString(), WordContext(prevWords, nextWords))
         }
     }
 }

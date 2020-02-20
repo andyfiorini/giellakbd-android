@@ -8,11 +8,17 @@ import io.reactivex.Single
 
 @Dao
 interface DictionaryDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertLanguage(language: Language): Completable
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertLanguage(language: Language): Long
 
-    @Query("SELECT * FROM Language WHERE language = :language")
-    fun findLanguage(language: String): Array<Language>
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertLanguageC(language: Language): Completable
+
+    @Query("SELECT * FROM Language WHERE language_id = :languageId")
+    fun findLanguage(languageId: Long): Array<Language>
+
+    @Query("SELECT * FROM Language WHERE language = :language AND country = :country AND variant = :variant")
+    fun findLanguage(language: String, country: String, variant: String): Array<Language>
 
     @Query("SELECT * FROM Language")
     fun languages(): List<Language>
@@ -50,8 +56,8 @@ interface DictionaryDao {
     fun updateWord(word: DictionaryWord): Int
 
     @Transaction
-    fun insertContext(language: String, word: String, wordContext: WordContext): Long {
-        val l = findLanguage(language).firstOrNull() ?: return 0
+    fun insertContext(languageId: Long, word: String, wordContext: WordContext): Long {
+        val l = findLanguage(languageId).firstOrNull() ?: return 0
         val dictionaryWord = findWord(l.languageId, word).firstOrNull() ?: return 0
         val wC = wordContext.copy(wordId = dictionaryWord.wordId)
         return insertContext(wC)

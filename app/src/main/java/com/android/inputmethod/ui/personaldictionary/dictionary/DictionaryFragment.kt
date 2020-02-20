@@ -17,7 +17,6 @@ import com.android.inputmethod.ui.personaldictionary.upload.UploadNavArg
 import com.android.inputmethod.ui.personaldictionary.word.WordNavArg
 import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.usecases.RemoveWordUseCase
-import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -56,6 +55,9 @@ class DictionaryFragment : Fragment(), DictionaryView {
         rvDictionary.layoutManager = LinearLayoutManager(context!!)
         rvDictionary.adapter = adapter
 
+        fab_personaldict_addword.setOnClickListener {
+            navigateToAddWordDialogFragment(languageId)
+        }
     }
 
     override fun onResume() {
@@ -105,18 +107,15 @@ class DictionaryFragment : Fragment(), DictionaryView {
     }
 
     override fun events(): Observable<DictionaryEvent> {
-        return Observable.merge(
-                adapter.events().map {
-                    when (it) {
-                        is DictionaryWordEvent.PressEvent -> {
-                            DictionaryEvent.OnWordSelected(it.wordId, it.word)
-                        }
-                        is DictionaryWordEvent.RemoveEvent -> {
-                            DictionaryEvent.OnRemoveEvent(it.wordId)
-                        }
-                    }
-                },
-                fab_personaldict_addword.clicks().map { DictionaryEvent.AddWordEvent }
-        )
+        return adapter.events().map {
+            when (it) {
+                is DictionaryWordEvent.PressEvent -> {
+                    DictionaryEvent.OnWordSelected(it.wordId, it.word)
+                }
+                is DictionaryWordEvent.RemoveEvent -> {
+                    DictionaryEvent.OnRemoveEvent(it.wordId)
+                }
+            }
+        }
     }
 }

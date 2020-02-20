@@ -20,7 +20,7 @@ abstract class PersonalDictionaryDatabase : RoomDatabase() {
 
         private fun buildDatabase(context: Context) =
                 Room.databaseBuilder(context.applicationContext,
-                        PersonalDictionaryDatabase::class.java, "Sample.db")
+                        PersonalDictionaryDatabase::class.java, "personal_dictionaries.db")
                         // TODO, remove destructive migrations
                         .fallbackToDestructiveMigration()
                         // TODO, Do not work on main thread unless needed.

@@ -44,10 +44,6 @@ class DictionaryPresenter(
                     removeWordUseCase.execute(dictionaryEvent.wordId)
                     Observable.empty()
                 }
-                DictionaryEvent.AddWordEvent -> {
-                    view.navigateToUploadDictionary(view.languageId)
-                    Observable.empty()
-                }
             }
         }
     }

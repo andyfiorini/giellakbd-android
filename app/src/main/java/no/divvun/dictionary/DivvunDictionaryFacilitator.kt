@@ -83,7 +83,7 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
     override fun resetDictionaries(context: Context?, newLocale: Locale?, useContactsDict: Boolean, usePersonalizedDicts: Boolean, forceReloadMainDictionary: Boolean, account: String?, dictNamePrefix: String?, listener: DictionaryFacilitator.DictionaryInitializationListener?) {
         context?.let {
             dictionary = DivvunDictionary(it, newLocale)
-            personalDictionary = PersonalDictionary(it, newLocale)
+            personalDictionary = PersonalDictionary(it, newLocale!!)
         }
     }
 

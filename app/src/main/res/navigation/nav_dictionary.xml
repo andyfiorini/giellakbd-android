@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_dictionary.xml"
-    app:startDestination="@id/dictionaryFragment">
+    app:startDestination="@id/languageFragment">
 
     <fragment
         android:id="@+id/dictionaryFragment"
@@ -47,10 +47,18 @@
     <dialog
         android:id="@+id/addWordDialogFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogFragment"
-        android:label="AddWordDialogFragment">
+        android:label="">
 
         <argument
             android:name="addWordDialogNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg" />
     </dialog>
+    <fragment
+        android:id="@+id/languageFragment"
+        android:name="com.android.inputmethod.ui.personaldictionary.language.LanguageFragment"
+        android:label="Personal Dictionaries">
+        <action
+            android:id="@+id/action_languageFragment_to_dictionaryFragment"
+            app:destination="@id/dictionaryFragment" />
+    </fragment>
 </navigation>
