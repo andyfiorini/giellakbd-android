@@ -6,9 +6,8 @@ import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
 
 class DictionaryUseCase(private val database: PersonalDictionaryDatabase) {
-
-    fun execute(): Observable<Dictionary> {
+    fun execute(languageId: Long): Observable<Dictionary> {
         return database.dictionaryDao()
-                .dictionaryO()
+                .dictionaryO(languageId)
     }
 }

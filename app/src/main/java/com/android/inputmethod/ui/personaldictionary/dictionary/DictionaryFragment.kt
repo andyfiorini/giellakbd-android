@@ -2,19 +2,22 @@ package com.android.inputmethod.ui.personaldictionary.dictionary
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
+import com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordEvent
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewHolder
+import com.android.inputmethod.ui.personaldictionary.upload.UploadNavArg
 import com.android.inputmethod.ui.personaldictionary.word.WordNavArg
 import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.usecases.RemoveWordUseCase
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -30,6 +33,9 @@ class DictionaryFragment : Fragment(), DictionaryView {
 
     private val factory = DictionaryWordViewHolder.DictionaryWordViewHolderFactory
     private val adapter = EventAdapter(factory)
+
+    private val navArgs by navArgs<DictionaryFragmentArgs>()
+    override val languageId by lazy { navArgs.dictionaryNavArg.languageId }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +56,6 @@ class DictionaryFragment : Fragment(), DictionaryView {
         rvDictionary.layoutManager = LinearLayoutManager(context!!)
         rvDictionary.adapter = adapter
 
-        fab_personaldict_addword.setOnClickListener {
-            navigateToAddWordDialogFragment()
-        }
     }
 
     override fun onResume() {
@@ -71,13 +74,16 @@ class DictionaryFragment : Fragment(), DictionaryView {
         )
     }
 
-    override fun navigateToAddWordDialogFragment() {
-        findNavController().navigate(DictionaryFragmentDirections.actionDictionaryFragmentToAddWordDialogFragment())
+    override fun navigateToAddWordDialogFragment(languageId: Long) {
+        findNavController().navigate(DictionaryFragmentDirections.actionDictionaryFragmentToAddWordDialogFragment(
+                AddWordDialogNavArg(languageId)
+        ))
     }
 
-    override fun navigateToUploadDictionary() {
-        findNavController().navigate(DictionaryFragmentDirections.actionDictionaryFragmentToUploadFragment())
+    override fun navigateToUploadDictionary(languageId: Long) {
+        findNavController().navigate(DictionaryFragmentDirections.actionDictionaryFragmentToUploadFragment(UploadNavArg(languageId)))
     }
+
 
     override fun render(viewState: DictionaryViewState) {
         adapter.update(viewState.dictionary)
@@ -92,24 +98,25 @@ class DictionaryFragment : Fragment(), DictionaryView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.fragment_upload -> {
-                navigateToUploadDictionary()
+                navigateToUploadDictionary(languageId)
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun events(): Observable<DictionaryEvent> {
-        return adapter.events().map {
-            when (it) {
-                is DictionaryWordEvent.OnClickPressEvent -> {
-                    DictionaryEvent.OnWordSelected(it.wordId, it.word)
-                }
-                is DictionaryWordEvent.OnClickRemoveEvent -> {
-                    DictionaryEvent.OnRemoveEvent(it.wordId)
-                }
-            }
-
-        }
+        return Observable.merge(
+                adapter.events().map {
+                    when (it) {
+                        is DictionaryWordEvent.PressEvent -> {
+                            DictionaryEvent.OnWordSelected(it.wordId, it.word)
+                        }
+                        is DictionaryWordEvent.RemoveEvent -> {
+                            DictionaryEvent.OnRemoveEvent(it.wordId)
+                        }
+                    }
+                },
+                fab_personaldict_addword.clicks().map { DictionaryEvent.AddWordEvent }
+        )
     }
-
 }

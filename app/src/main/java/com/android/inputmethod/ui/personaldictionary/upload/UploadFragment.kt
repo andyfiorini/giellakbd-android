@@ -23,14 +23,6 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class UploadFragment : Fragment(), UploadView {
-    override fun navigateToSuccess() {
-        // Ugly hack to not move whole presenter to UI thread.
-        activity?.runOnUiThread {
-            Toast.makeText(context, getString(R.string.dictionary_upload_success), Toast.LENGTH_SHORT).show()
-            findNavController().navigate(UploadFragmentDirections.actionUploadFragmentToDictionaryFragment())
-        }
-    }
-
     private lateinit var disposable: Disposable
 
     private lateinit var database: PersonalDictionaryDatabase
@@ -48,14 +40,14 @@ class UploadFragment : Fragment(), UploadView {
         super.onCreate(savedInstanceState)
         database = PersonalDictionaryDatabase.getInstance(context!!)
 
-        uploadUseCase = UploadUseCase(database, divvunDictionaryUploadService)
+        // TODO add languageId
+        uploadUseCase = UploadUseCase(0, database, divvunDictionaryUploadService)
         presenter = UploadPresenter(this, uploadUseCase)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_personal_upload, container, false)
     }
-
 
     override fun onResume() {
         super.onResume()
@@ -78,4 +70,13 @@ class UploadFragment : Fragment(), UploadView {
     override fun events(): Observable<UploadEvent> {
         return b_upload_upload.clicks().map { UploadEvent.OnUploadPressed }
     }
+
+    override fun navigateToSuccess() {
+        // Ugly hack to not move whole presenter to UI thread.
+        activity?.runOnUiThread {
+            Toast.makeText(context, getString(R.string.dictionary_upload_success), Toast.LENGTH_SHORT).show()
+            findNavController().navigateUp()
+        }
+    }
+
 }

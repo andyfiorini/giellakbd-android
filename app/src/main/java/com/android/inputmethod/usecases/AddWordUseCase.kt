@@ -9,6 +9,7 @@ import no.divvun.dictionary.personal.DictionaryWord
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
 class AddWordUseCase(
+        private val languageId: Long,
         private val database: PersonalDictionaryDatabase,
         private val validateWordUseCase: ValidateWordUseCase) {
 
@@ -19,7 +20,7 @@ class AddWordUseCase(
                         Single.just(AddWordException.Validation(it).left())
                     }, {
                         database.dictionaryDao()
-                                .insertWord(DictionaryWord(word, 0))
+                                .insertWord(DictionaryWord(word, 0, languageId = languageId))
                                 .toSingle { AddWordSuccess }
                                 .z {
                                     when (it) {

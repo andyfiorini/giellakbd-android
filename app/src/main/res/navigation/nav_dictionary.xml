@@ -17,6 +17,10 @@
         <action
             android:id="@+id/action_dictionaryFragment_to_addWordDialogFragment"
             app:destination="@id/addWordDialogFragment" />
+
+        <argument
+            android:name="dictionaryNavArg"
+            app:argType="com.android.inputmethod.ui.personaldictionary.dictionary.DictionaryNavArg" />
     </fragment>
 
     <fragment
@@ -30,16 +34,23 @@
             android:name="wordNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.word.WordNavArg" />
     </fragment>
+
     <fragment
         android:id="@+id/uploadFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.upload.UploadFragment"
         android:label="Upload Dictionary">
-        <action
-            android:id="@+id/action_uploadFragment_to_dictionaryFragment"
-            app:destination="@id/dictionaryFragment" />
+        <argument
+            android:name="uploadNavArg"
+            app:argType="com.android.inputmethod.ui.personaldictionary.upload.UploadNavArg" />
     </fragment>
+
     <dialog
         android:id="@+id/addWordDialogFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogFragment"
-        android:label="AddWordDialogFragment" />
+        android:label="AddWordDialogFragment">
+
+        <argument
+            android:name="addWordDialogNavArg"
+            app:argType="com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg" />
+    </dialog>
 </navigation>

@@ -18,7 +18,7 @@ class DictionaryPresenter(
 
     fun start(): Observable<DictionaryViewState> {
         return Observable.merge(
-                dictionaryUseCase.execute().map { DictionaryUpdate.Dictionary(it) },
+                dictionaryUseCase.execute(view.languageId).map { DictionaryUpdate.Dictionary(it) },
                 view.events().compose(uiTransformer))
                 .scan(initialViewState, { state: DictionaryViewState, event: DictionaryUpdate ->
                     when (event) {
@@ -42,6 +42,10 @@ class DictionaryPresenter(
                 }
                 is DictionaryEvent.OnRemoveEvent -> {
                     removeWordUseCase.execute(dictionaryEvent.wordId)
+                    Observable.empty()
+                }
+                DictionaryEvent.AddWordEvent -> {
+                    view.navigateToUploadDictionary(view.languageId)
                     Observable.empty()
                 }
             }

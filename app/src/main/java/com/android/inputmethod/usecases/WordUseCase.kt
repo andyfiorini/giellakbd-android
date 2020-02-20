@@ -9,6 +9,6 @@ class WordUseCase(private val database: PersonalDictionaryDatabase) {
 
     fun execute(wordId: Long): Observable<DictionaryWord> {
         return database.dictionaryDao()
-                .findWord(wordId)
+                .findWordO(wordId)
     }
 }

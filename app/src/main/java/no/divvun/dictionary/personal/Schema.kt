@@ -1,35 +1,56 @@
 package no.divvun.dictionary.personal
 
 import androidx.room.*
-import com.google.gson.reflect.TypeToken
-
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 
 typealias Dictionary = List<DictionaryWord>
 
+@Entity(tableName = "Language",
+        indices = [Index("language", unique = true)])
+data class Language(
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = "language_id")
+        val languageId: Long = 0,
+        val language: String
+)
+
 @Entity(tableName = "Candidates",
-        primaryKeys = ["word"],
-        indices = [Index("word", unique = true)])
+        foreignKeys = [
+            ForeignKey(entity = Language::class,
+                    parentColumns = arrayOf("language_id"),
+                    childColumns = arrayOf("language_id"),
+                    onDelete = ForeignKey.CASCADE)],
+        indices = [Index(value = ["word", "language_id"], unique = true), Index("language_id")])
 data class Candidate(
-        val word: String = ""
+        @PrimaryKey
+        val word: String = "",
+        @ColumnInfo(name = "language_id")
+        val languageId: Long
 )
 
 @Entity(tableName = "Dictionary",
-        indices = [Index("word", unique = true)])
+        foreignKeys = [ForeignKey(entity = Language::class,
+                parentColumns = arrayOf("language_id"),
+                childColumns = arrayOf("language_id"),
+                onDelete = ForeignKey.CASCADE)],
+        indices = [Index(value = ["word", "language_id"], unique = true), Index("language_id")])
 data class DictionaryWord(
         val word: String = "",
         val typeCount: Long = 2,
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name = "id")
-        val wordId: Long = 0
+        @ColumnInfo(name = "word_id")
+        val wordId: Long = 0,
+        @ColumnInfo(name = "language_id")
+        val languageId: Long
 )
 
 @Entity(tableName = "WordContext",
         foreignKeys = [
             ForeignKey(entity = DictionaryWord::class,
-                    parentColumns = arrayOf("id"),
+                    parentColumns = arrayOf("word_id"),
                     childColumns = arrayOf("word_id"),
                     onDelete = ForeignKey.CASCADE)],
         indices = [Index("word_id")]
@@ -48,9 +69,9 @@ data class WordContext(
 
 data class WordWithContext(
         @Embedded
-        var dictionaryWord: DictionaryWord = DictionaryWord(),
+        var dictionaryWord: DictionaryWord,
 
-        @Relation(parentColumn = "id", entityColumn = "word_id", entity = WordContext::class)
+        @Relation(parentColumn = "word_id", entityColumn = "word_id", entity = WordContext::class)
         var contexts: List<WordContext> = emptyList()
 )
 

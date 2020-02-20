@@ -13,6 +13,7 @@ import java.util.*
 class PersonalDictionary(private val context: Context?, locale: Locale?) : Dictionary(TYPE_USER, locale) {
 
     private val database: PersonalDictionaryDatabase = PersonalDictionaryDatabase.getInstance(context!!)
+    private val languageId by lazy { database.dictionaryDao().findLanguage(locale!!.toLanguageTag()).first().languageId }
 
     override fun getSuggestions(
             composedData: ComposedData,
@@ -24,7 +25,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
             inOutWeightOfLangModelVsSpatialModel: FloatArray): ArrayList<SuggestedWordInfo> {
 
 
-        val scoreMap = database.dictionaryDao().dictionary()
+        val scoreMap = database.dictionaryDao().dictionary(languageId)
                 .asSequence()
                 .map { it.word }
                 .map { it to it.levenshtein(composedData.mTypedWord) }
@@ -44,35 +45,35 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
     }
 
     override fun isInDictionary(word: String): Boolean {
-        return database.dictionaryDao().findWord(word).isNotEmpty()
+        return database.dictionaryDao().findWord(languageId, word).isNotEmpty()
     }
 
     fun addWord(word: String) {
         if (isInDictionary(word)) {
             Log.d("PersonalDict", "$word already in personal dictionary")
-            val ret = database.dictionaryDao().incWord(word)
+            val ret = database.dictionaryDao().incWord(languageId, word)
             Log.d("PersonalDict", "Return $ret")
             return
         }
 
-        if (database.candidatesDao().isCandidate(word) > 0) {
+        if (database.candidatesDao().isCandidate(languageId, word) > 0) {
             Log.d("PersonalDict", "$word was candidate, now in personal dictionary")
             // Word is already candidate, second time typed. Time to add to personal dictionary.
-            database.candidatesDao().removeCandidate(word)
-            database.dictionaryDao().insertWord(DictionaryWord(word)).subscribe()
+            database.candidatesDao().removeCandidate(languageId, word)
+            database.dictionaryDao().insertWord(DictionaryWord(word, languageId = languageId)).subscribe()
         } else {
             Log.d("PersonalDict", "$word is new candidate")
-            database.candidatesDao().insertCandidate(Candidate(word))
+            database.candidatesDao().insertCandidate(Candidate(word, languageId = languageId))
         }
     }
 
     fun undoWord(word: String) {
         if (isInDictionary(word)) {
             Log.d("PersonalDict", "$word already in personal dictionary")
-            database.dictionaryDao().decWord(word)
+            database.dictionaryDao().decWord(languageId, word)
         } else {
             Log.d("PersonalDict", "$word is no longer candidate")
-            database.candidatesDao().removeCandidate(word)
+            database.candidatesDao().removeCandidate(languageId, word)
         }
 
     }
@@ -83,7 +84,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale?) : Dicti
             val prevWord2 = ngramContext.getNthPrevWord(2)?.toString()
             val prevWord3 = ngramContext.getNthPrevWord(3)?.toString()
             val prevWords = listOfNotNull(prevWord2, prevWord3)
-            database.dictionaryDao().insertContext(word.toString(), WordContext(prevWords, nextWords))
+            database.dictionaryDao().insertContext(mLocale!!.toLanguageTag(), word.toString(), WordContext(prevWords, nextWords))
         }
     }
 }

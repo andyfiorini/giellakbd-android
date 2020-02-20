@@ -1,16 +1,16 @@
 package com.android.inputmethod.usecases
 
-import no.divvun.service.DivvunDictionaryUploadService
 import io.reactivex.Single
-import no.divvun.dictionary.personal.WordWithContext
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
+import no.divvun.dictionary.personal.WordWithContext
 import no.divvun.domain.DictionaryJson
 import no.divvun.domain.WordContextJson
 import no.divvun.domain.WordJson
+import no.divvun.service.DivvunDictionaryUploadService
 
-class UploadUseCase(private val database: PersonalDictionaryDatabase, private val divvunDictionaryUploadService: DivvunDictionaryUploadService) {
+class UploadUseCase(private val languageId: Long, private val database: PersonalDictionaryDatabase, private val divvunDictionaryUploadService: DivvunDictionaryUploadService) {
     fun execute(): Single<DictionaryJson> {
-        return database.dictionaryDao().dictionaryWithContexts()
+        return database.dictionaryDao().dictionaryWithContexts(languageId)
                 .take(1)
                 .singleOrError()
                 .map(mapper)

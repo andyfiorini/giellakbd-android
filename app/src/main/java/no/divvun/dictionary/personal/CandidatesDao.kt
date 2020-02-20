@@ -3,22 +3,23 @@ package no.divvun.dictionary.personal
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import io.reactivex.Single
 
 @Dao
 interface CandidatesDao {
-    @Query("SELECT * FROM Candidates WHERE word=:word")
-    fun findCandidate(word: String): Single<Candidate>
+    @Query("SELECT * FROM Candidates WHERE word=:word AND language_id=:languageId")
+    fun findCandidate(languageId: Long, word: String): Single<Candidate>
 
-    @Query("SELECT COUNT(1) FROM Candidates WHERE word=:word")
-    fun containsCandidate(word: String): Int
+    @Query("SELECT COUNT(1) FROM Candidates WHERE word=:word AND language_id=:languageId")
+    fun containsCandidate(languageId: Long, word: String): Int
 
-    @Query("SELECT COUNT(word) FROM Candidates WHERE word=:word")
-    fun isCandidate(word: String): Int
+    @Query("SELECT COUNT(word) FROM Candidates WHERE word=:word AND language_id=:languageId")
+    fun isCandidate(languageId: Long, word: String): Int
 
     @Insert
     fun insertCandidate(candidate: Candidate)
 
-    @Query("DELETE FROM Candidates WHERE word = :word")
-    fun removeCandidate(word: String): Int
+    @Query("DELETE FROM Candidates WHERE word = :word AND language_id = :languageId")
+    fun removeCandidate(languageId: Long, word: String): Int
 }

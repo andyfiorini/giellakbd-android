@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.usecases.AddWordUseCase
 import com.android.inputmethod.usecases.ValidateWordUseCase
@@ -24,12 +25,14 @@ class AddWordDialogFragment : DialogFragment(), AddWordDialogView {
     private lateinit var disposable: Disposable
     private lateinit var presenter: AddWordDialogPresenter
 
+    private val navArg by navArgs<AddWordDialogFragmentArgs>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, android.R.style.Theme_Material_Light_Dialog_MinWidth)
         val database = PersonalDictionaryDatabase.getInstance(context!!)
         val validateWordUseCase = ValidateWordUseCase()
-        val addWordUseCase = AddWordUseCase(database, validateWordUseCase)
+        val addWordUseCase = AddWordUseCase(navArg.addWordDialogNavArg.languageId, database, validateWordUseCase)
         presenter = AddWordDialogPresenter(this, addWordUseCase, validateWordUseCase)
     }
 
