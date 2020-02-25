@@ -109,6 +109,7 @@ dependencies {
     kapt "io.arrow-kt:arrow-meta:$arrowVersion"
     implementation "com.github.lenguyenthanh:RxArrow:$rxArrowVersion"
 
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 }
 
 repositories {

@@ -20,7 +20,7 @@ class AddWordUseCase(
                         Single.just(AddWordException.Validation(it).left())
                     }, {
                         database.dictionaryDao()
-                                .insertWord(DictionaryWord(word, 0, languageId = languageId))
+                                .insertWord(DictionaryWord(word, 0, true, languageId = languageId))
                                 .toSingle { AddWordSuccess }
                                 .z {
                                     when (it) {

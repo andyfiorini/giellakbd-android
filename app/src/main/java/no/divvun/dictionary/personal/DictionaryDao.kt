@@ -14,42 +14,42 @@ interface DictionaryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertLanguageC(language: Language): Completable
 
-    @Query("SELECT * FROM Language WHERE language_id = :languageId")
+    @Query("SELECT * FROM languages WHERE language_id = :languageId")
     fun findLanguage(languageId: Long): Array<Language>
 
-    @Query("SELECT * FROM Language WHERE language = :language AND country = :country AND variant = :variant")
+    @Query("SELECT * FROM languages WHERE language = :language AND country = :country AND variant = :variant")
     fun findLanguage(language: String, country: String, variant: String): Array<Language>
 
-    @Query("SELECT * FROM Language")
+    @Query("SELECT * FROM languages")
     fun languages(): List<Language>
 
-    @Query("SELECT * FROM Language")
+    @Query("SELECT * FROM languages")
     fun languagesO(): Observable<List<Language>>
 
 
-    @Query("SELECT * FROM Dictionary WHERE language_id=:languageId")
+    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=0")
     fun dictionary(languageId: Long): List<DictionaryWord>
 
-    @Query("SELECT * FROM Dictionary WHERE language_id=:languageId")
+    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=0")
     fun dictionaryO(languageId: Long): Observable<List<DictionaryWord>>
 
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertWord(word: DictionaryWord): Completable
 
-    @Query("SELECT * FROM Dictionary WHERE word_id = :wordId")
+    @Query("SELECT * FROM words WHERE word_id = :wordId")
     fun findWord(wordId: Long): List<DictionaryWord>
 
-    @Query("SELECT * FROM Dictionary WHERE word_id = :wordId")
+    @Query("SELECT * FROM words WHERE word_id = :wordId")
     fun findWordO(wordId: Long): Observable<DictionaryWord>
 
-    @Query("SELECT * FROM Dictionary WHERE language_id == :languageId AND word = :word")
+    @Query("SELECT * FROM words WHERE language_id == :languageId AND word = :word")
     fun findWord(languageId: Long, word: String): List<DictionaryWord>
 
-    @Query("SELECT * FROM Dictionary WHERE language_id == :languageId AND word = :word")
+    @Query("SELECT * FROM words WHERE language_id == :languageId AND word = :word")
     fun findWordS(languageId: Long, word: String): Single<List<DictionaryWord>>
 
-    @Query("DELETE FROM Dictionary WHERE word_id = :wordId")
+    @Query("DELETE FROM words WHERE word_id = :wordId")
     fun removeWord(wordId: Long): Int
 
     @Update
@@ -63,7 +63,7 @@ interface DictionaryDao {
         return insertContext(wC)
     }
 
-    @Query("SELECT * FROM WordContext WHERE word_id = :wordId")
+    @Query("SELECT * FROM word_contexts WHERE word_id = :wordId")
     fun wordContexts(wordId: Long): Flowable<List<WordContext>>
 
     @Insert
@@ -97,11 +97,11 @@ interface DictionaryDao {
     }
 
     @Transaction
-    @Query("SELECT * FROM Dictionary WHERE language_id = :languageId")
+    @Query("SELECT * FROM words WHERE language_id = :languageId")
     fun dictionaryWithContexts(languageId: Long): Observable<List<WordWithContext>>
 
     @Transaction
-    @Query("SELECT * FROM Dictionary WHERE word_id = :wordId")
+    @Query("SELECT * FROM words WHERE word_id = :wordId")
     fun wordWithContext(wordId: Long): Observable<WordWithContext>
 
 }

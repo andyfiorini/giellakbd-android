@@ -8,7 +8,7 @@ import java.lang.reflect.Type
 
 typealias Dictionary = List<DictionaryWord>
 
-@Entity(tableName = "Language",
+@Entity(tableName = "languages",
         indices = [Index("language", unique = true)])
 data class Language(
         val language: String,
@@ -19,7 +19,7 @@ data class Language(
         val languageId: Long = 0
 )
 
-@Entity(tableName = "Candidates",
+@Entity(tableName = "candidates",
         foreignKeys = [
             ForeignKey(entity = Language::class,
                     parentColumns = arrayOf("language_id"),
@@ -33,7 +33,7 @@ data class Candidate(
         val languageId: Long
 )
 
-@Entity(tableName = "Dictionary",
+@Entity(tableName = "words",
         foreignKeys = [ForeignKey(entity = Language::class,
                 parentColumns = arrayOf("language_id"),
                 childColumns = arrayOf("language_id"),
@@ -42,6 +42,8 @@ data class Candidate(
 data class DictionaryWord(
         val word: String = "",
         val typeCount: Long = 2,
+        val manuallyAdded: Boolean = false,
+        val blacklisted: Boolean = false,
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "word_id")
         val wordId: Long = 0,
@@ -49,7 +51,7 @@ data class DictionaryWord(
         val languageId: Long
 )
 
-@Entity(tableName = "WordContext",
+@Entity(tableName = "word_contexts",
         foreignKeys = [
             ForeignKey(entity = DictionaryWord::class,
                     parentColumns = arrayOf("word_id"),
