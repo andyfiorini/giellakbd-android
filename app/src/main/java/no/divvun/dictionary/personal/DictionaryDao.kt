@@ -43,6 +43,9 @@ interface DictionaryDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertWord(word: DictionaryWord): Completable
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun upsertWord(word: DictionaryWord): Completable
+
     @Query("SELECT * FROM words WHERE word_id = :wordId")
     fun findWord(wordId: Long): List<DictionaryWord>
 

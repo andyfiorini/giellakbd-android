@@ -26,13 +26,14 @@ class AddWordDialogFragment : DialogFragment(), AddWordDialogView {
     private lateinit var presenter: AddWordDialogPresenter
 
     private val navArg by navArgs<AddWordDialogFragmentArgs>()
+    override val languageId: Long by lazy { navArg.addWordDialogNavArg.languageId }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, android.R.style.Theme_Material_Light_Dialog_MinWidth)
         val database = PersonalDictionaryDatabase.getInstance(context!!)
         val validateWordUseCase = ValidateWordUseCase()
-        val addWordUseCase = AddWordUseCase(navArg.addWordDialogNavArg.languageId, database, validateWordUseCase)
+        val addWordUseCase = AddWordUseCase(database, validateWordUseCase)
         presenter = AddWordDialogPresenter(this, addWordUseCase, validateWordUseCase)
     }
 
@@ -46,13 +47,14 @@ class AddWordDialogFragment : DialogFragment(), AddWordDialogView {
         b_addword_cancel.setOnClickListener { dismiss() }
     }
 
+
     override fun render(viewState: AddWordDialogViewState) {
         til_addword.error = viewState.error?.asString(resources)
     }
 
     private fun AddWordViewError.asString(resources: Resources): String = when (this) {
-        AddWordViewError.WordContainsSpace -> resources.getString(R.string.addword_error_contains_space)
-        AddWordViewError.EmptyWord -> resources.getString(R.string.addword_error_empty)
+        AddWordViewError.WordContainsSpace -> resources.getString(R.string.word_error_contains_space)
+        AddWordViewError.EmptyWord -> resources.getString(R.string.word_error_empty)
         AddWordViewError.WordAlreadyExists -> resources.getString(R.string.addword_word_exists)
         is AddWordViewError.Unknown -> this.message
     }

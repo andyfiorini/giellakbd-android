@@ -37,7 +37,8 @@ data class Candidate(
         foreignKeys = [ForeignKey(entity = Language::class,
                 parentColumns = arrayOf("language_id"),
                 childColumns = arrayOf("language_id"),
-                onDelete = ForeignKey.CASCADE)],
+                onDelete = ForeignKey.CASCADE,
+                deferred = true)],
         indices = [Index(value = ["word", "language_id"], unique = true), Index("language_id")])
 data class DictionaryWord(
         val word: String = "",

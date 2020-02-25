@@ -27,7 +27,7 @@ class AddWordDialogPresenter(
                     }.toObservable()
                 }
                 is AddWordDialogEvent.OnDialogAddWordEvent -> {
-                    addWordUseCase.execute(event.word.trim()).map { result ->
+                    addWordUseCase.execute(view.languageId, event.word.trim()).map { result ->
                         result.fold({
                             AddWordUpdate.AddWordError(it)
                         }, {

@@ -57,7 +57,6 @@
             android:name="uploadNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.upload.UploadNavArg" />
     </fragment>
-
     <dialog
         android:id="@+id/addWordDialogFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogFragment"
@@ -67,12 +66,25 @@
             android:name="addWordDialogNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg" />
     </dialog>
+
     <fragment
         android:id="@+id/blacklistFragment"
         android:name="com.android.inputmethod.ui.personaldictionary.blacklist.BlacklistFragment"
-        android:label="fragment_title_blacklist">
+        android:label="@string/fragment_title_blacklist">
         <argument
             android:name="blacklistNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.blacklist.BlacklistNavArg" />
+        <action
+            android:id="@+id/action_blacklistFragment_to_blacklistWordDialogFragment"
+            app:destination="@id/blacklistWordDialogFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/blacklistWordDialogFragment"
+        android:name="com.android.inputmethod.ui.personaldictionary.blacklistworddialog.BlacklistWordDialogFragment"
+        android:label="BlacklistWordDialogFragment">
+
+        <argument
+            android:name="blacklistWordDialogNavArg"
+            app:argType="com.android.inputmethod.ui.personaldictionary.blacklistworddialog.BlacklistWordDialogNavArg" />
+    </dialog>
 </navigation>

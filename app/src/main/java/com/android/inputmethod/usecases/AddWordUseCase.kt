@@ -9,11 +9,10 @@ import no.divvun.dictionary.personal.DictionaryWord
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
 class AddWordUseCase(
-        private val languageId: Long,
         private val database: PersonalDictionaryDatabase,
         private val validateWordUseCase: ValidateWordUseCase) {
 
-    fun execute(word: String): Single<Either<AddWordException, AddWordSuccess>> {
+    fun execute(languageId: Long, word: String): Single<Either<AddWordException, AddWordSuccess>> {
         return validateWordUseCase.execute(word)
                 .flatMap { validationE ->
                     validationE.fold({

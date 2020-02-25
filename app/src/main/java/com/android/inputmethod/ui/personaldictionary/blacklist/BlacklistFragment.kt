@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,8 +14,9 @@ import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
 import com.android.inputmethod.ui.personaldictionary.blacklist.adapter.BlacklistWordEvent
 import com.android.inputmethod.ui.personaldictionary.blacklist.adapter.BlacklistWordViewHolder
+import com.android.inputmethod.ui.personaldictionary.blacklistworddialog.BlacklistWordDialogNavArg
 import com.android.inputmethod.usecases.BlacklistUseCase
-import com.android.inputmethod.usecases.BlacklistWordUseCase
+import com.android.inputmethod.usecases.ChangeBlacklistUseCase
 import com.android.inputmethod.usecases.RemoveWordUseCase
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -41,7 +43,7 @@ class BlacklistFragment : Fragment(), BlacklistView {
         val database = PersonalDictionaryDatabase.getInstance(context!!)
         val blacklistUseCase = BlacklistUseCase(database)
         val removeWordUseCase = RemoveWordUseCase(database)
-        val blacklistWordUseCase = BlacklistWordUseCase(database)
+        val blacklistWordUseCase = ChangeBlacklistUseCase(database)
         presenter = BlacklistPresenter(this, blacklistUseCase, removeWordUseCase, blacklistWordUseCase)
     }
 
@@ -71,11 +73,9 @@ class BlacklistFragment : Fragment(), BlacklistView {
     }
 
     override fun navigateToBlacklistWordDialogFragment(languageId: Long) {
-        /**
-        findNavController().navigate(BlacklistFragmentDirections.actionBlacklistFragmentToAddWordDialogFragment(
-        BlacklistWordDialogNavArg(languageId)
+        findNavController().navigate(BlacklistFragmentDirections.actionBlacklistFragmentToBlacklistWordDialogFragment(
+                BlacklistWordDialogNavArg(languageId)
         ))
-         */
     }
 
     override fun render(viewState: BlacklistViewState) {
