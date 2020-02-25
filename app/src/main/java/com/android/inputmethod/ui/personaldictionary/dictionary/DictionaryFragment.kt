@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
 import com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg
+import com.android.inputmethod.ui.personaldictionary.blacklist.BlacklistNavArg
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordEvent
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewHolder
 import com.android.inputmethod.ui.personaldictionary.upload.UploadNavArg
@@ -89,9 +90,15 @@ class DictionaryFragment : Fragment(), DictionaryView {
     }
 
 
+    override fun navigateToBlacklistFragment(languageId: Long) {
+        findNavController().navigate(DictionaryFragmentDirections.actionDictionaryFragmentToBlacklistFragment(BlacklistNavArg(languageId)))
+    }
+
+
     override fun render(viewState: DictionaryViewState) {
         adapter.update(viewState.dictionary)
         g_personaldict_empty.isInvisible = viewState.dictionary.isNotEmpty()
+        g_personaldict_empty.requestLayout()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -103,6 +110,9 @@ class DictionaryFragment : Fragment(), DictionaryView {
         when (item.itemId) {
             R.id.fragment_upload -> {
                 navigateToUploadDictionary(languageId)
+            }
+            R.id.fragment_blacklist -> {
+                navigateToBlacklistFragment(languageId)
             }
         }
         return super.onOptionsItemSelected(item)

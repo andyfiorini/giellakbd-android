@@ -4,8 +4,13 @@
 
     <item
         android:id="@+id/fragment_upload"
-        app:showAsAction="always"
+        android:icon="@drawable/vd_cloud_upload"
         android:title="Upload"
         android:tooltipText="Upload data to UIT"
-        android:icon="@drawable/vd_cloud_upload"/>
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/fragment_blacklist"
+        android:icon="@drawable/vd_blacklist"
+        android:title="Blacklist"
+        android:tooltipText="List of forbidden words" />
 </menu>

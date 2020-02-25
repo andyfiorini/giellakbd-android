@@ -32,6 +32,9 @@
         <argument
             android:name="language"
             app:argType="string" />
+        <action
+            android:id="@+id/action_dictionaryFragment_to_blacklistFragment"
+            app:destination="@id/blacklistFragment" />
     </fragment>
 
     <fragment
@@ -64,4 +67,12 @@
             android:name="addWordDialogNavArg"
             app:argType="com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg" />
     </dialog>
+    <fragment
+        android:id="@+id/blacklistFragment"
+        android:name="com.android.inputmethod.ui.personaldictionary.blacklist.BlacklistFragment"
+        android:label="fragment_title_blacklist">
+        <argument
+            android:name="blacklistNavArg"
+            app:argType="com.android.inputmethod.ui.personaldictionary.blacklist.BlacklistNavArg" />
+    </fragment>
 </navigation>

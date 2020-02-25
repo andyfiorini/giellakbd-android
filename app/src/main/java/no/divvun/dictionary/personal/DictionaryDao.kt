@@ -33,6 +33,12 @@ interface DictionaryDao {
     @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=0")
     fun dictionaryO(languageId: Long): Observable<List<DictionaryWord>>
 
+    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=1")
+    fun blacklist(languageId: Long): List<DictionaryWord>
+
+    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=1")
+    fun blacklistO(languageId: Long): Observable<List<DictionaryWord>>
+
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertWord(word: DictionaryWord): Completable

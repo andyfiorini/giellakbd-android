@@ -11,5 +11,6 @@ interface DictionaryView {
     fun navigateToWordFragment(wordId: Long, word: String)
     fun navigateToAddWordDialogFragment(languageId: Long)
     fun navigateToUploadDictionary(languageId: Long)
+    fun navigateToBlacklistFragment(languageId: Long)
 }
 
