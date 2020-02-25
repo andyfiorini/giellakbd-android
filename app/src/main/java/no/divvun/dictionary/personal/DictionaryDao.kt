@@ -56,6 +56,13 @@ interface DictionaryDao {
     fun updateWord(word: DictionaryWord): Int
 
     @Transaction
+    fun blacklistWord(wordId: Long, blacklist: Boolean): Int {
+        val dictionaryWord = findWord(wordId).first()
+        val updatedWord = dictionaryWord.copy(blacklisted = blacklist)
+        return updateWord(updatedWord)
+    }
+
+    @Transaction
     fun insertContext(languageId: Long, word: String, wordContext: WordContext): Long {
         val l = findLanguage(languageId).firstOrNull() ?: return 0
         val dictionaryWord = findWord(l.languageId, word).firstOrNull() ?: return 0

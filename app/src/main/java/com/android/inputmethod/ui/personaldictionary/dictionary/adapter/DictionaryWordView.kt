@@ -21,7 +21,7 @@ class DictionaryWordView(context: Context, attr: AttributeSet?, style: Int) : Co
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
     }
 
-    fun update(viewState: DictionaryWordViewState){
+    fun update(viewState: DictionaryWordViewState) {
         this.viewState = viewState
         tv_dictitem_word.text = viewState.word
     }
@@ -30,6 +30,7 @@ class DictionaryWordView(context: Context, attr: AttributeSet?, style: Int) : Co
     override fun events(): Observable<DictionaryWordEvent> {
         return Observable.merge(
                 tv_dictitem_word.clicks().map { DictionaryWordEvent.PressEvent(viewState.wordId, viewState.word) },
+                iv_dictitem_blacklist.clicks().map { DictionaryWordEvent.BlacklistEvent(viewState.wordId) },
                 iv_dictitem_remove.clicks().map { DictionaryWordEvent.RemoveEvent(viewState.wordId) }
         )
     }

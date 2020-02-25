@@ -4,4 +4,5 @@ package com.android.inputmethod.ui.personaldictionary.dictionary.adapter
 sealed class DictionaryWordEvent {
     data class PressEvent(val wordId: Long, val word: String): DictionaryWordEvent()
     data class RemoveEvent(val wordId: Long): DictionaryWordEvent()
+    data class BlacklistEvent(val wordId: Long): DictionaryWordEvent()
 }

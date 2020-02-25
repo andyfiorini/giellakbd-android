@@ -1,6 +1,7 @@
 package com.android.inputmethod.ui.personaldictionary.dictionary
 
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewState
+import com.android.inputmethod.usecases.BlacklistWordUseCase
 import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.usecases.RemoveWordUseCase
 import io.reactivex.Observable
@@ -11,7 +12,8 @@ import java.util.*
 class DictionaryPresenter(
         private val view: DictionaryView,
         private val dictionaryUseCase: DictionaryUseCase,
-        private val removeWordUseCase: RemoveWordUseCase
+        private val removeWordUseCase: RemoveWordUseCase,
+        private val blacklistWordUseCase: BlacklistWordUseCase
 ) {
     private val initialViewState: DictionaryViewState = DictionaryViewState()
 
@@ -43,6 +45,10 @@ class DictionaryPresenter(
                 }
                 is DictionaryEvent.OnRemoveEvent -> {
                     removeWordUseCase.execute(dictionaryEvent.wordId)
+                    Observable.empty()
+                }
+                is DictionaryEvent.OnBlacklistEvent -> {
+                    blacklistWordUseCase.execute(dictionaryEvent.wordId, true)
                     Observable.empty()
                 }
             }

@@ -8,7 +8,7 @@ import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.ItemEventEmitter
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.dictionary_item.view.*
+import kotlinx.android.synthetic.main.language_item.view.*
 
 class LanguageWordView(context: Context, attr: AttributeSet?, style: Int) : ConstraintLayout(context, attr, style), ItemEventEmitter<LanguageWordEvent> {
     constructor(context: Context, attr: AttributeSet) : this(context, attr, 0)
@@ -17,20 +17,20 @@ class LanguageWordView(context: Context, attr: AttributeSet?, style: Int) : Cons
     private lateinit var viewState: LanguageWordViewState
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.dictionary_item, this)
+        LayoutInflater.from(context).inflate(R.layout.language_item, this)
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
     }
 
-    fun update(viewState: LanguageWordViewState){
+    fun update(viewState: LanguageWordViewState) {
         this.viewState = viewState
-        tv_dictitem_word.text = "${viewState.language} ${viewState.country} ${viewState.variant}"
+        tv_langitem_lang.text = "${viewState.language} ${viewState.country} ${viewState.variant}"
     }
 
 
     override fun events(): Observable<LanguageWordEvent> {
         return Observable.merge(
-                tv_dictitem_word.clicks().map { LanguageWordEvent.PressEvent(viewState.languageId, viewState.language) },
-                iv_dictitem_remove.clicks().map { LanguageWordEvent.RemoveEvent(viewState.languageId) }
+                tv_langitem_lang.clicks().map { LanguageWordEvent.PressEvent(viewState.languageId, viewState.language) },
+                iv_langitem_remove.clicks().map { LanguageWordEvent.RemoveEvent(viewState.languageId) }
         )
     }
 }
