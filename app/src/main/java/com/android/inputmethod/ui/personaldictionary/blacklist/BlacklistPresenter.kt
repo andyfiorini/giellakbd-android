@@ -2,7 +2,7 @@ package com.android.inputmethod.ui.personaldictionary.blacklist
 
 import com.android.inputmethod.ui.personaldictionary.blacklist.adapter.BlacklistWordViewState
 import com.android.inputmethod.usecases.BlacklistUseCase
-import com.android.inputmethod.usecases.ChangeBlacklistUseCase
+import com.android.inputmethod.usecases.SetBlacklistUseCase
 import com.android.inputmethod.usecases.RemoveWordUseCase
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -13,7 +13,7 @@ class BlacklistPresenter(
         private val view: BlacklistView,
         private val blacklistUseCase: BlacklistUseCase,
         private val removeWordUseCase: RemoveWordUseCase,
-        private val blacklistWordUseCase: ChangeBlacklistUseCase
+        private val blacklistWordUseCase: SetBlacklistUseCase
 ) {
     private val initialViewState: BlacklistViewState = BlacklistViewState()
 

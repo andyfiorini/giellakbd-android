@@ -16,7 +16,7 @@ import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.Dictiona
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewHolder
 import com.android.inputmethod.ui.personaldictionary.upload.UploadNavArg
 import com.android.inputmethod.ui.personaldictionary.word.WordNavArg
-import com.android.inputmethod.usecases.ChangeBlacklistUseCase
+import com.android.inputmethod.usecases.SetBlacklistUseCase
 import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.usecases.RemoveWordUseCase
 import io.reactivex.Observable
@@ -35,8 +35,8 @@ class DictionaryFragment : Fragment(), DictionaryView {
     private val factory = DictionaryWordViewHolder.DictionaryWordViewHolderFactory
     private val adapter = EventAdapter(factory)
 
-    private val navArgs by navArgs<DictionaryFragmentArgs>()
-    override val languageId by lazy { navArgs.dictionaryNavArg.languageId }
+    private val args by navArgs<DictionaryFragmentArgs>()
+    override val languageId by lazy { args.dictionaryNavArg.languageId }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +44,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
         val database = PersonalDictionaryDatabase.getInstance(context!!)
         val dictionaryUseCase = DictionaryUseCase(database)
         val removeWordUseCase = RemoveWordUseCase(database)
-        val blacklistWordUseCase = ChangeBlacklistUseCase(database)
+        val blacklistWordUseCase = SetBlacklistUseCase(database)
         presenter = DictionaryPresenter(this, dictionaryUseCase, removeWordUseCase, blacklistWordUseCase)
     }
 

@@ -1,21 +1,20 @@
 package com.android.inputmethod.ui.personaldictionary.word
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
+import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextEvent
 import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextViewHolder
+import com.android.inputmethod.usecases.RemoveWordContextUseCase
 import com.android.inputmethod.usecases.WordContextUseCase
-import com.android.inputmethod.usecases.WordUseCase
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -30,20 +29,18 @@ class WordFragment : Fragment(), WordView {
     private val adapter = EventAdapter(factory)
 
     private lateinit var database: PersonalDictionaryDatabase
-    private lateinit var wordContextUseCase: WordContextUseCase
-    private lateinit var wordUseCase: WordUseCase
     private lateinit var presenter: WordPresenter
 
     private val args by navArgs<WordFragmentArgs>()
+    override val wordId by lazy { args.wordNavArg.wordId }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = PersonalDictionaryDatabase.getInstance(context!!)
 
-        wordContextUseCase = WordContextUseCase(database)
-        wordUseCase = WordUseCase(database)
-
-        presenter = WordPresenter(args.wordNavArg.wordId, wordContextUseCase)
+        val wordContextUseCase = WordContextUseCase(database)
+        val deleteWordContextUseCase = RemoveWordContextUseCase(database)
+        presenter = WordPresenter(this, wordContextUseCase, deleteWordContextUseCase)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -68,7 +65,13 @@ class WordFragment : Fragment(), WordView {
     }
 
     override fun events(): Observable<WordEvent> {
-        return Observable.empty()
+        return adapter.events().map {
+            when (it) {
+                is WordContextEvent.Delete -> {
+                    WordEvent.DeleteContext(it.wordContextId)
+                }
+            }
+        }
     }
 
     override fun render(viewState: WordViewState) {

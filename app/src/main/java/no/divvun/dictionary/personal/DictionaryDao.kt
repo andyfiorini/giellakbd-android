@@ -85,8 +85,8 @@ interface DictionaryDao {
     @Insert
     fun insertContext(wordContext: WordContext): Long
 
-    @Delete
-    fun removeContext(wordContext: WordContext): Int
+    @Query("DELETE FROM word_contexts WHERE word_context_id = :contextId")
+    fun removeContext(contextId: Long): Int
 
     @Transaction
     fun incWord(languageId: Long, word: String): Int {

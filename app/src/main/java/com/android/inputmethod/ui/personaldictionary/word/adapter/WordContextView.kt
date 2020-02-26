@@ -8,6 +8,7 @@ import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.ItemEventEmitter
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.dictionary_item_context.view.*
 
@@ -31,11 +32,11 @@ class WordContextView(context: Context, attr: AttributeSet?, style: Int) : Const
             }
             append(viewState.nextWords.joinToString(" "))
         }
-        tv_dictitem_context.text = text
+        tv_contextitem_text.text = text
     }
 
 
     override fun events(): Observable<WordContextEvent> {
-        return Observable.empty()
+        return iv_contextitem_delete.clicks().map { WordContextEvent.Delete(viewState.wordContextId) }
     }
 }
