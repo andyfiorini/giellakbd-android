@@ -89,13 +89,35 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
 
     }
 
-    fun updateContext(ngramContext: NgramContext, nextWords: List<String>) {
-        val word = ngramContext.getNthPrevWord(1)
-        if (word != null && isInDictionary(word.toString())) {
-            val prevWord2 = ngramContext.getNthPrevWord(2)?.toString()
-            val prevWord3 = ngramContext.getNthPrevWord(3)?.toString()
-            val prevWords = listOfNotNull(prevWord2, prevWord3)
-            database.dictionaryDao().insertContext(languageId, word.toString(), WordContext(prevWords, nextWords))
+    private var prevWord: String? = null
+    private var prevContextId = -1L
+
+    fun processContext(words: List<String>) {
+        if (prevWord != null && prevWord == words.getOrNull(1)) {
+            val generatedContext = words.getContext(1)
+            val oldContext = database.dictionaryDao().findContext(prevContextId).first()
+            val updatedContext = generatedContext.copy(wordId = oldContext.wordId, wordContextId = prevContextId)
+            database.dictionaryDao().updateContext(updatedContext)
         }
+
+        val currentWord = words.firstOrNull()
+        if (currentWord != null && isInDictionary(currentWord)) {
+            val wordContext = words.getContext(0)
+            prevContextId = database.dictionaryDao().insertContext(languageId, currentWord, wordContext)
+            prevWord = currentWord
+        } else {
+            prevWord = null
+        }
+    }
+
+    private fun List<String>.getContext(index: Int): WordContext {
+        require(index < size)
+        val prevWords = if (index + 1 >= size) {
+            emptyList()
+        } else {
+            drop(index + 1).reversed()
+        }
+
+        return WordContext(prevWords = prevWords, nextWords = take(index).reversed())
     }
 }

@@ -79,6 +79,9 @@ interface DictionaryDao {
         return insertContext(wC)
     }
 
+    @Update
+    fun updateContext(word: WordContext): Int
+
     @Query("SELECT * FROM word_contexts WHERE word_id = :wordId")
     fun wordContexts(wordId: Long): Flowable<List<WordContext>>
 
@@ -87,6 +90,9 @@ interface DictionaryDao {
 
     @Query("DELETE FROM word_contexts WHERE word_context_id = :contextId")
     fun removeContext(contextId: Long): Int
+
+    @Query("SELECT * FROM word_contexts WHERE word_context_id == :contextId")
+    fun findContext(contextId: Long): List<WordContext>
 
     @Transaction
     fun incWord(languageId: Long, word: String): Int {

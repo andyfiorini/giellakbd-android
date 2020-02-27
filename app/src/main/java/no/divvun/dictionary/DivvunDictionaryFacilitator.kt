@@ -121,22 +121,18 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
 
     // STUB
     override fun addToUserHistory(suggestion: String?, wasAutoCapitalized: Boolean, ngramContext: NgramContext, timeStampInSeconds: Long, blockPotentiallyOffensive: Boolean) {
-        Log.d(tag, "addToUserHistory")
-
-        Log.d(tag, "AddToUserHistory ngramContext: $ngramContext")
-        Log.d(tag, "AddToUserHistory ngramContext: ${ngramContext.prevWordCount}")
         suggestion?.let {
             if (!dictionary.isInDictionary(suggestion)) {
                 Log.d(tag, "Adding non known word: $suggestion")
                 personalDictionary.addWord(suggestion)
             }
+            val previousWords = ngramContext.extractPrevWordsContextArray().toList().filter { it != NgramContext.BEGINNING_OF_SENTENCE_TAG }.takeLast(2)
+            val writtenWords = previousWords + listOf(suggestion)
+
+            personalDictionary.processContext(writtenWords.reversed())
         }
 
-        ngramContext.getNthPrevWord(1)?.let {
-            if (personalDictionary.isInDictionary(it.toString())) {
-                personalDictionary.updateContext(ngramContext, listOfNotNull(suggestion))
-            }
-        }
+
     }
 
     // STUB
