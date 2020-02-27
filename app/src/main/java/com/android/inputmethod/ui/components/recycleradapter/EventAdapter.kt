@@ -34,7 +34,7 @@ class EventAdapter<
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position)
         } else {
-            holder.applyUpdate(items.get(position), payloads)
+            holder.applyUpdate(items[position], payloads)
 
             holder.view.events().subscribe(itemViewEventSubject)
         }
