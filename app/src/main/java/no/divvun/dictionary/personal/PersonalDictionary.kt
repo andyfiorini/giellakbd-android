@@ -20,6 +20,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
 
     init {
         CreateLanguageUseCase(database).execute(locale.toLanguage())
+        Log.d("PersonalDictionary", "New Personal DictionaryInstance")
     }
 
     private fun Locale.toLanguage(): Language {
@@ -86,38 +87,31 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
             Log.d("PersonalDict", "$word is no longer candidate")
             database.candidatesDao().removeCandidate(languageId, word)
         }
-
     }
 
-    private var prevWord: String? = null
-    private var prevContextId = -1L
+    private var cachedPrevWord: CachedWordContext? = null
 
-    fun processContext(words: List<String>) {
-        if (prevWord != null && prevWord == words.getOrNull(1)) {
-            val generatedContext = words.getContext(1)
-            val oldContext = database.dictionaryDao().findContext(prevContextId).first()
-            val updatedContext = generatedContext.copy(wordId = oldContext.wordId, wordContextId = prevContextId)
-            database.dictionaryDao().updateContext(updatedContext)
-        }
+    /* Previously written words, newest word is last */
+    fun processContext(prevWords: List<String>, currentWord: String) {
+        processPreviousWord(cachedPrevWord, prevWords, currentWord)
 
-        val currentWord = words.firstOrNull()
-        if (currentWord != null && isInDictionary(currentWord)) {
-            val wordContext = words.getContext(0)
-            prevContextId = database.dictionaryDao().insertContext(languageId, currentWord, wordContext)
-            prevWord = currentWord
+        cachedPrevWord = if (isInDictionary(currentWord)) {
+            val currentContextId = database.dictionaryDao().insertContext(languageId, currentWord, prevWords, emptyList())
+            CachedWordContext(currentWord, currentContextId)
         } else {
-            prevWord = null
+            null
         }
     }
 
-    private fun List<String>.getContext(index: Int): WordContext {
-        require(index < size)
-        val prevWords = if (index + 1 >= size) {
-            emptyList()
-        } else {
-            drop(index + 1).reversed()
-        }
+    private fun processPreviousWord(prevContext: CachedWordContext?, prevWords: List<String>, currentWord: String) {
+        prevContext ?: return
+        val prevWord = prevWords.lastOrNull() ?: return
 
-        return WordContext(prevWords = prevWords, nextWords = take(index).reversed())
+        if (prevContext.word == prevWord) {
+            val wordBefore = prevWords.dropLast(1)
+            database.dictionaryDao().updateContext(prevContext.contextId, wordBefore, listOf(currentWord))
+        }
     }
+
+    data class CachedWordContext(val word: String, val contextId: Long)
 }

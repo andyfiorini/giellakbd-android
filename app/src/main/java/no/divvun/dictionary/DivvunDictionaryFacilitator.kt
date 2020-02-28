@@ -81,7 +81,7 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
 
     // STUB
     override fun resetDictionaries(context: Context?, newLocale: Locale?, useContactsDict: Boolean, usePersonalizedDicts: Boolean, forceReloadMainDictionary: Boolean, account: String?, dictNamePrefix: String?, listener: DictionaryFacilitator.DictionaryInitializationListener?) {
-        context?.let {
+        context!!.let {
             dictionary = DivvunDictionary(it, newLocale)
             personalDictionary = PersonalDictionary(it, newLocale!!)
         }
@@ -120,19 +120,13 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
     }
 
     // STUB
-    override fun addToUserHistory(suggestion: String?, wasAutoCapitalized: Boolean, ngramContext: NgramContext, timeStampInSeconds: Long, blockPotentiallyOffensive: Boolean) {
-        suggestion?.let {
-            if (!dictionary.isInDictionary(suggestion)) {
-                Log.d(tag, "Adding non known word: $suggestion")
-                personalDictionary.addWord(suggestion)
-            }
-            val previousWords = ngramContext.extractPrevWordsContextArray().toList().filter { it != NgramContext.BEGINNING_OF_SENTENCE_TAG }.takeLast(2)
-            val writtenWords = previousWords + listOf(suggestion)
-
-            personalDictionary.processContext(writtenWords.reversed())
+    override fun addToUserHistory(suggestion: String, wasAutoCapitalized: Boolean, ngramContext: NgramContext, timeStampInSeconds: Long, blockPotentiallyOffensive: Boolean) {
+        if (!dictionary.isInDictionary(suggestion)) {
+            Log.d(tag, "Adding non known word: $suggestion")
+            personalDictionary.addWord(suggestion)
         }
-
-
+        val previousWords = ngramContext.extractPrevWordsContextArray().toList().filter { it != NgramContext.BEGINNING_OF_SENTENCE_TAG }.takeLast(2)
+        personalDictionary.processContext(previousWords, suggestion)
     }
 
     // STUB

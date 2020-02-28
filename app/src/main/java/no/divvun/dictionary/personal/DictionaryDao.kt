@@ -72,15 +72,24 @@ interface DictionaryDao {
     }
 
     @Transaction
-    fun insertContext(languageId: Long, word: String, wordContext: WordContext): Long {
+    fun insertContext(languageId: Long, word: String, prevWords: List<String>, nextWords: List<String>): Long {
         val l = findLanguage(languageId).firstOrNull() ?: return 0
         val dictionaryWord = findWord(l.languageId, word).firstOrNull() ?: return 0
-        val wC = wordContext.copy(wordId = dictionaryWord.wordId)
-        return insertContext(wC)
+        val wordContext = WordContext(prevWords, nextWords, dictionaryWord.wordId)
+        return insertContext(wordContext)
     }
 
     @Update
     fun updateContext(word: WordContext): Int
+
+
+    @Transaction
+    fun updateContext(contextId: Long, prevWords: List<String>, nextWords: List<String>) {
+        val oldContext = findContext(contextId).first()
+        val updatedContext = oldContext.copy(prevWords = prevWords, nextWords = nextWords)
+        updateContext(updatedContext)
+    }
+
 
     @Query("SELECT * FROM word_contexts WHERE word_id = :wordId")
     fun wordContexts(wordId: Long): Flowable<List<WordContext>>
