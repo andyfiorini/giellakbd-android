@@ -2,7 +2,6 @@ package no.divvun.dictionary.personal
 
 import androidx.room.*
 import io.reactivex.Completable
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -21,9 +20,6 @@ interface DictionaryDao {
     fun findLanguage(language: String, country: String, variant: String): Array<Language>
 
     @Query("SELECT * FROM languages")
-    fun languages(): List<Language>
-
-    @Query("SELECT * FROM languages")
     fun languagesO(): Observable<List<Language>>
 
 
@@ -32,9 +28,6 @@ interface DictionaryDao {
 
     @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=0")
     fun dictionaryO(languageId: Long): Observable<List<DictionaryWord>>
-
-    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=1")
-    fun blacklist(languageId: Long): List<DictionaryWord>
 
     @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=1")
     fun blacklistO(languageId: Long): Observable<List<DictionaryWord>>
@@ -91,9 +84,6 @@ interface DictionaryDao {
     }
 
 
-    @Query("SELECT * FROM word_contexts WHERE word_id = :wordId")
-    fun wordContexts(wordId: Long): Flowable<List<WordContext>>
-
     @Insert
     fun insertContext(wordContext: WordContext): Long
 
@@ -110,20 +100,8 @@ interface DictionaryDao {
     }
 
     @Transaction
-    fun incWord(wordId: Long): Int {
-        val dictionaryWord = findWord(wordId).firstOrNull() ?: return 0
-        return updateWord(dictionaryWord.copy(typeCount = dictionaryWord.typeCount.inc()))
-    }
-
-    @Transaction
     fun decWord(languageId: Long, word: String): Int {
         val dictionaryWord = findWord(languageId, word).firstOrNull() ?: return 0
-        return updateWord(dictionaryWord.copy(typeCount = dictionaryWord.typeCount.dec()))
-    }
-
-    @Transaction
-    fun decWord(wordId: Long): Int {
-        val dictionaryWord = findWord(wordId).firstOrNull() ?: return 0
         return updateWord(dictionaryWord.copy(typeCount = dictionaryWord.typeCount.dec()))
     }
 
