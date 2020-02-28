@@ -17,7 +17,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class DivvunDictionaryFacilitator : DictionaryFacilitator {
-    private val tag = createTag(this)
+    private val TAG = createTag(this)
     private var isActive = false
 
     private var dictionary = DivvunDictionary(null, null)
@@ -25,57 +25,57 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
 
     // STUB
     override fun setValidSpellingWordReadCache(cache: LruCache<String, Boolean>) {
-        Log.d(tag, "setValidSpellingWordReadCache")
+        Log.d(TAG, "setValidSpellingWordReadCache")
     }
 
     // STUB
     override fun setValidSpellingWordWriteCache(cache: LruCache<String, Boolean>?) {
-        Log.d(tag, "setValidSpellingWordWriteCache")
+        Log.d(TAG, "setValidSpellingWordWriteCache")
     }
 
     override fun isForLocale(locale: Locale?): Boolean {
-        Log.d(tag, "isForLocale $locale")
+        Log.d(TAG, "isForLocale $locale")
         return dictionary.mLocale == locale
     }
 
     // STUB
     override fun isForAccount(account: String?): Boolean {
-        Log.d(tag, "isForAccount")
+        Log.d(TAG, "isForAccount")
         return false
     }
 
     // STUB
     override fun onStartInput() {
-        Log.d(tag, "onStartInput")
+        Log.d(TAG, "onStartInput")
         isActive = true
     }
 
     // STUB
     override fun onFinishInput(context: Context?) {
-        Log.d(tag, "onFinishInput")
+        Log.d(TAG, "onFinishInput")
         isActive = false
     }
 
     // STUB
     override fun isActive(): Boolean {
-        Log.d(tag, "isActive")
+        Log.d(TAG, "isActive")
         return isActive
     }
 
     override fun getLocale(): Locale {
-        Log.d(tag, "getLocale")
+        Log.d(TAG, "getLocale")
         return dictionary.mLocale!!
     }
 
     // STUB
     override fun usesContacts(): Boolean {
-        Log.d(tag, "usesContacts")
+        Log.d(TAG, "usesContacts")
         return false
     }
 
     // STUB
     override fun getAccount(): String {
-        Log.d(tag, "getAccount")
+        Log.d(TAG, "getAccount")
         return ""
     }
 
@@ -89,41 +89,41 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
 
     // STUB
     override fun resetDictionariesForTesting(context: Context?, locale: Locale?, dictionaryTypes: ArrayList<String>?, dictionaryFiles: HashMap<String, File>?, additionalDictAttributes: MutableMap<String, MutableMap<String, String>>?, account: String?) {
-        Log.d(tag, "resetDictionariesForTesting")
+        Log.d(TAG, "resetDictionariesForTesting")
     }
 
     // STUB
     override fun closeDictionaries() {
-        Log.d(tag, "closeDictionaries")
+        Log.d(TAG, "closeDictionaries")
     }
 
     // STUB
     override fun hasAtLeastOneInitializedMainDictionary(): Boolean {
-        Log.d(tag, "hasAtLeastOneInitializedMainDictionary")
+        Log.d(TAG, "hasAtLeastOneInitializedMainDictionary")
         return dictionary.isInitialized
     }
 
     // STUB
     override fun hasAtLeastOneUninitializedMainDictionary(): Boolean {
-        Log.d(tag, "hasAtLeastOneUninitializedMainDictionary")
+        Log.d(TAG, "hasAtLeastOneUninitializedMainDictionary")
         return !dictionary.isInitialized
     }
 
     // STUB
     override fun waitForLoadingMainDictionaries(timeout: Long, unit: TimeUnit?) {
-        Log.d(tag, "waitForLoadingMainDictionaries")
+        Log.d(TAG, "waitForLoadingMainDictionaries")
     }
 
     // STUB
     override fun waitForLoadingDictionariesForTesting(timeout: Long, unit: TimeUnit?) {
-        Log.d(tag, "waitForLoadingDictiionariesForTesting")
+        Log.d(TAG, "waitForLoadingDictionariesForTesting")
     }
 
     // STUB
     override fun addToUserHistory(suggestion: String, wasAutoCapitalized: Boolean, ngramContext: NgramContext, timeStampInSeconds: Long, blockPotentiallyOffensive: Boolean) {
         if (!dictionary.isInDictionary(suggestion)) {
-            Log.d(tag, "Adding non known word: $suggestion")
-            personalDictionary.addWord(suggestion)
+            Log.d(TAG, "Adding non known word: $suggestion")
+            personalDictionary.learn(suggestion)
         }
         val previousWords = ngramContext.extractPrevWordsContextArray().toList().filter { it != NgramContext.BEGINNING_OF_SENTENCE_TAG }.takeLast(2)
         personalDictionary.processContext(previousWords, suggestion)
@@ -131,9 +131,9 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
 
     // STUB
     override fun unlearnFromUserHistory(word: String?, ngramContext: NgramContext, timeStampInSeconds: Long, eventType: Int) {
-        Log.d(tag, "unlearnFromUserHistory")
+        Log.d(TAG, "unlearnFromUserHistory")
         word?.let {
-            personalDictionary.undoWord(word)
+            personalDictionary.unlearn(word)
         }
     }
 
@@ -147,8 +147,8 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
         suggestionResults.addAll(divvunSuggestions)
         suggestionResults.addAll(personalSuggestions)
 
-        Log.d("DivvunDictFac", "Personal suggestions: $personalSuggestions")
-        Log.d("DivvunDictFac", "All suggestions: $suggestionResults")
+        Log.d(TAG, "Personal suggestions: $personalSuggestions")
+        Log.d(TAG, "All suggestions: $suggestionResults")
 
         return suggestionResults
     }
@@ -158,24 +158,24 @@ class DivvunDictionaryFacilitator : DictionaryFacilitator {
 
     // STUB
     override fun clearUserHistoryDictionary(context: Context?): Boolean {
-        Log.d(tag, "clearUserHistoryDictionary")
+        Log.d(TAG, "clearUserHistoryDictionary")
         return true
     }
 
     // STUB
     override fun dump(context: Context?): String {
-        Log.d(tag, "dump")
+        Log.d(TAG, "dump")
         return ""
     }
 
     // STUB
     override fun dumpDictionaryForDebug(dictName: String?) {
-        Log.d(tag, "dumpDictionaryForDebug")
+        Log.d(TAG, "dumpDictionaryForDebug")
     }
 
     // STUB
     override fun getDictionaryStats(context: Context?): MutableList<DictionaryStats> {
-        Log.d(tag, "getDictionaryStats")
+        Log.d(TAG, "getDictionaryStats")
         return mutableListOf()
     }
 

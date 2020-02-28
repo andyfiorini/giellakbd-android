@@ -60,7 +60,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
         return database.dictionaryDao().findWord(languageId, word).isNotEmpty()
     }
 
-    fun addWord(word: String) {
+    fun learn(word: String) {
         if (isInDictionary(word)) {
             Log.d("PersonalDict", "$word already in personal dictionary")
             val ret = database.dictionaryDao().incWord(languageId, word)
@@ -79,7 +79,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
         }
     }
 
-    fun undoWord(word: String) {
+    fun unlearn(word: String) {
         if (isInDictionary(word)) {
             Log.d("PersonalDict", "$word already in personal dictionary")
             database.dictionaryDao().decWord(languageId, word)
