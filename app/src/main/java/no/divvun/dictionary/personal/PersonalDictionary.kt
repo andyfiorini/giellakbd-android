@@ -8,10 +8,12 @@ import com.android.inputmethod.latin.SuggestedWords.SuggestedWordInfo
 import com.android.inputmethod.latin.common.ComposedData
 import com.android.inputmethod.latin.settings.SettingsValuesForSuggestion
 import com.android.inputmethod.usecases.CreateLanguageUseCase
+import no.divvun.createTag
 import no.divvun.levenshtein
 import java.util.*
 
 class PersonalDictionary(private val context: Context?, locale: Locale) : Dictionary(TYPE_USER, locale) {
+    private val TAG = createTag(this)
 
     private val database: PersonalDictionaryDatabase = PersonalDictionaryDatabase.getInstance(context!!)
     private val languageId by lazy {
@@ -20,7 +22,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
 
     init {
         CreateLanguageUseCase(database).execute(locale.toLanguage())
-        Log.d("PersonalDictionary", "New Personal DictionaryInstance")
+        Log.d(TAG, "New Personal DictionaryInstance")
     }
 
     private fun Locale.toLanguage(): Language {
@@ -45,7 +47,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
                 .sortedBy { it.second }
                 .take(5).toList()
 
-        Log.d("PersonalDictionary", "composedData $composedData")
+        Log.d(TAG, "composedData $composedData")
 
         val results = scoreMap.map { (suggestion, levenshteinScore) ->
             SuggestedWordInfo(suggestion, ngramContext.extractPrevWordsContext(),
@@ -62,29 +64,29 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
 
     fun learn(word: String) {
         if (isInDictionary(word)) {
-            Log.d("PersonalDict", "$word already in personal dictionary")
+            Log.d(TAG, "$word already in personal dictionary")
             val ret = database.dictionaryDao().incWord(languageId, word)
-            Log.d("PersonalDict", "Return $ret")
+            Log.d(TAG, "Return $ret")
             return
         }
 
         if (database.candidatesDao().isCandidate(languageId, word) > 0) {
-            Log.d("PersonalDict", "$word was candidate, now in personal dictionary")
+            Log.d(TAG, "$word was candidate, now in personal dictionary")
             // Word is already candidate, second time typed. Time to add to personal dictionary.
             database.candidatesDao().removeCandidate(languageId, word)
             database.dictionaryDao().insertWord(DictionaryWord(word, languageId = languageId)).subscribe()
         } else {
-            Log.d("PersonalDict", "$word is new candidate")
+            Log.d(TAG, "$word is new candidate")
             database.candidatesDao().insertCandidate(Candidate(word, languageId = languageId))
         }
     }
 
     fun unlearn(word: String) {
         if (isInDictionary(word)) {
-            Log.d("PersonalDict", "$word already in personal dictionary")
+            Log.d(TAG, "$word already in personal dictionary")
             database.dictionaryDao().decWord(languageId, word)
         } else {
-            Log.d("PersonalDict", "$word is no longer candidate")
+            Log.d(TAG, "$word is no longer candidate")
             database.candidatesDao().removeCandidate(languageId, word)
         }
     }
@@ -93,7 +95,9 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
 
     /* Previously written words, newest word is last */
     fun processContext(prevWords: List<String>, currentWord: String) {
-        processPreviousWord(cachedPrevWord, prevWords, currentWord)
+        cachedPrevWord?.let {
+            processPreviousWord(it, prevWords, currentWord)
+        }
 
         cachedPrevWord = if (isInDictionary(currentWord)) {
             val currentContextId = database.dictionaryDao().insertContext(languageId, currentWord, prevWords, emptyList())
@@ -103,8 +107,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
         }
     }
 
-    private fun processPreviousWord(prevContext: CachedWordContext?, prevWords: List<String>, currentWord: String) {
-        prevContext ?: return
+    private fun processPreviousWord(prevContext: CachedWordContext, prevWords: List<String>, currentWord: String) {
         val prevWord = prevWords.lastOrNull() ?: return
 
         if (prevContext.word == prevWord) {
@@ -113,5 +116,5 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
         }
     }
 
-    data class CachedWordContext(val word: String, val contextId: Long)
+    private data class CachedWordContext(val word: String, val contextId: Long)
 }
