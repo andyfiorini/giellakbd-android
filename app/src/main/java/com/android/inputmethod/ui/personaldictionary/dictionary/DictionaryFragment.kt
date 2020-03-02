@@ -1,24 +1,33 @@
 package com.android.inputmethod.ui.personaldictionary.dictionary
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.TextPaint
+import android.util.TypedValue
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
+import com.android.inputmethod.ui.components.recycleradapter.SwipeActionCallback
+import com.android.inputmethod.ui.components.recycleradapter.SwipeActionConf
+import com.android.inputmethod.ui.components.recycleradapter.SwipeConf
 import com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg
 import com.android.inputmethod.ui.personaldictionary.blacklist.BlacklistNavArg
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordEvent
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewHolder
 import com.android.inputmethod.ui.personaldictionary.upload.UploadNavArg
 import com.android.inputmethod.ui.personaldictionary.word.WordNavArg
-import com.android.inputmethod.usecases.SetBlacklistUseCase
 import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.usecases.RemoveWordUseCase
+import com.android.inputmethod.usecases.SetBlacklistUseCase
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -61,6 +70,33 @@ class DictionaryFragment : Fragment(), DictionaryView {
         fab_personaldict_addword.setOnClickListener {
             navigateToAddWordDialogFragment(languageId)
         }
+
+        val paint = TextPaint().apply {
+            color = Color.WHITE
+            isAntiAlias = true
+            val textSizePixel = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18f, resources.displayMetrics)
+            textSize = textSizePixel
+        }
+
+        val ith = ItemTouchHelper(
+                SwipeActionCallback(
+                        SwipeConf(
+                                SwipeActionConf(
+                                        resources.getDrawable(R.drawable.vd_delete, activity?.theme),
+                                        resources.getString(R.string.delete_word),
+                                        paint,
+                                        ColorDrawable(ContextCompat.getColor(context!!, R.color.colorDelete))
+                                ),
+                                SwipeActionConf(
+                                        resources.getDrawable(R.drawable.vd_blacklist, activity?.theme),
+                                        "Block",
+                                        paint,
+                                        ColorDrawable(ContextCompat.getColor(context!!, R.color.colorBlock))
+                                )
+                        )
+                )
+        )
+        ith.attachToRecyclerView(rvDictionary)
     }
 
     override fun onResume() {

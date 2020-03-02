@@ -35,7 +35,6 @@ class EventAdapter<
             onBindViewHolder(holder, position)
         } else {
             holder.applyUpdate(items[position], payloads)
-
             holder.view.events().subscribe(itemViewEventSubject)
         }
     }
