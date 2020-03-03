@@ -3,7 +3,7 @@ package com.android.inputmethod.ui.personaldictionary.blacklist
 import com.android.inputmethod.ui.personaldictionary.blacklist.adapter.BlacklistWordViewState
 import com.android.inputmethod.usecases.BlacklistUseCase
 import com.android.inputmethod.usecases.SetBlacklistUseCase
-import com.android.inputmethod.usecases.RemoveWordUseCase
+import com.android.inputmethod.usecases.SoftDeleteWordUseCase
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import no.divvun.dictionary.personal.DictionaryWord
@@ -12,7 +12,7 @@ import java.util.*
 class BlacklistPresenter(
         private val view: BlacklistView,
         private val blacklistUseCase: BlacklistUseCase,
-        private val removeWordUseCase: RemoveWordUseCase,
+        private val softDeleteWordUseCase: SoftDeleteWordUseCase,
         private val blacklistWordUseCase: SetBlacklistUseCase
 ) {
     private val initialViewState: BlacklistViewState = BlacklistViewState()
@@ -40,7 +40,7 @@ class BlacklistPresenter(
         it.flatMap { blacklistEvent ->
             when (blacklistEvent) {
                 is BlacklistEvent.OnRemoveEvent -> {
-                    removeWordUseCase.execute(blacklistEvent.wordId)
+                    softDeleteWordUseCase.execute(blacklistEvent.wordId, true)
                     Observable.empty<BlacklistUpdate>()
                 }
                 is BlacklistEvent.OnAllowEvent -> {

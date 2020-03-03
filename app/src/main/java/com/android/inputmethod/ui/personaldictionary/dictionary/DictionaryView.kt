@@ -6,7 +6,8 @@ interface DictionaryView {
     val languageId: Long
 
     fun render(viewState: DictionaryViewState)
-    fun events(): Observable<DictionaryEvent>
+
+    val events: Observable<DictionaryEvent>
 
     fun navigateToWordFragment(wordId: Long, word: String)
     fun navigateToAddWordDialogFragment(languageId: Long)

@@ -23,13 +23,13 @@ interface DictionaryDao {
     fun languagesO(): Observable<List<Language>>
 
 
-    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=0")
+    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=0 AND softDeleted=0")
     fun dictionary(languageId: Long): List<DictionaryWord>
 
-    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=0")
+    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=0 AND softDeleted=0")
     fun dictionaryO(languageId: Long): Observable<List<DictionaryWord>>
 
-    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=1")
+    @Query("SELECT * FROM words WHERE language_id=:languageId AND blacklisted=1 AND softDeleted=0")
     fun blacklistO(languageId: Long): Observable<List<DictionaryWord>>
 
 
@@ -48,14 +48,20 @@ interface DictionaryDao {
     @Query("SELECT * FROM words WHERE language_id == :languageId AND word = :word")
     fun findWord(languageId: Long, word: String): List<DictionaryWord>
 
+    @Query("SELECT * FROM words WHERE word_id = :wordId")
+    fun findWordS(wordId: Long): Single<List<DictionaryWord>>
+
     @Query("SELECT * FROM words WHERE language_id == :languageId AND word = :word")
     fun findWordS(languageId: Long, word: String): Single<List<DictionaryWord>>
 
     @Query("DELETE FROM words WHERE word_id = :wordId")
-    fun removeWord(wordId: Long): Int
+    fun removeWord(wordId: Long): Single<Int>
 
     @Update
     fun updateWord(word: DictionaryWord): Int
+
+    @Update
+    fun updateWordS(word: DictionaryWord): Single<Int>
 
     @Transaction
     fun blacklistWord(wordId: Long, blacklist: Boolean): Int {
@@ -106,11 +112,11 @@ interface DictionaryDao {
     }
 
     @Transaction
-    @Query("SELECT * FROM words WHERE language_id = :languageId")
+    @Query("SELECT * FROM words WHERE language_id = :languageId AND softDeleted=0")
     fun dictionaryWithContexts(languageId: Long): Observable<List<WordWithContext>>
 
     @Transaction
-    @Query("SELECT * FROM words WHERE word_id = :wordId")
+    @Query("SELECT * FROM words WHERE word_id = :wordId AND softDeleted=0")
     fun wordWithContext(wordId: Long): Observable<WordWithContext>
 
 }

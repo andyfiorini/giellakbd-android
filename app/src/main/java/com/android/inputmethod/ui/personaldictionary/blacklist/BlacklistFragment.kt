@@ -17,7 +17,7 @@ import com.android.inputmethod.ui.personaldictionary.blacklist.adapter.Blacklist
 import com.android.inputmethod.ui.personaldictionary.blacklistworddialog.BlacklistWordDialogNavArg
 import com.android.inputmethod.usecases.BlacklistUseCase
 import com.android.inputmethod.usecases.SetBlacklistUseCase
-import com.android.inputmethod.usecases.RemoveWordUseCase
+import com.android.inputmethod.usecases.SoftDeleteWordUseCase
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -42,7 +42,7 @@ class BlacklistFragment : Fragment(), BlacklistView {
         setHasOptionsMenu(true)
         val database = PersonalDictionaryDatabase.getInstance(context!!)
         val blacklistUseCase = BlacklistUseCase(database)
-        val removeWordUseCase = RemoveWordUseCase(database)
+        val removeWordUseCase = SoftDeleteWordUseCase(database)
         val blacklistWordUseCase = SetBlacklistUseCase(database)
         presenter = BlacklistPresenter(this, blacklistUseCase, removeWordUseCase, blacklistWordUseCase)
     }

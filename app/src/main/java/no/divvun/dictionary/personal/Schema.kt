@@ -45,6 +45,7 @@ data class DictionaryWord(
         val typeCount: Long = 2,
         val manuallyAdded: Boolean = false,
         val blacklisted: Boolean = false,
+        val softDeleted: Boolean = false,
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "word_id")
         val wordId: Long = 0,

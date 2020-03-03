@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.TextPaint
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import androidx.core.content.ContextCompat
@@ -23,11 +24,13 @@ import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.Dictiona
 import com.android.inputmethod.ui.personaldictionary.upload.UploadNavArg
 import com.android.inputmethod.ui.personaldictionary.word.WordNavArg
 import com.android.inputmethod.usecases.DictionaryUseCase
-import com.android.inputmethod.usecases.RemoveWordUseCase
 import com.android.inputmethod.usecases.SetBlacklistUseCase
+import com.android.inputmethod.usecases.SoftDeleteWordUseCase
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_personal_dictionary.*
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
@@ -45,18 +48,23 @@ class DictionaryFragment : Fragment(), DictionaryView {
     override val languageId by lazy { args.dictionaryNavArg.languageId }
 
     private lateinit var swipeActionCallback: SwipeActionCallback
+    private lateinit var snackbar: Snackbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         val database = PersonalDictionaryDatabase.getInstance(context!!)
         val dictionaryUseCase = DictionaryUseCase(database)
-        val removeWordUseCase = RemoveWordUseCase(database)
+        val removeWordUseCase = SoftDeleteWordUseCase(database)
         val blacklistWordUseCase = SetBlacklistUseCase(database)
         presenter = DictionaryPresenter(this, dictionaryUseCase, removeWordUseCase, blacklistWordUseCase)
+
+        Log.d("swipeActionCallback", "onCreate")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        Log.d("swipeActionCallback", "onCreateView")
         return inflater.inflate(R.layout.fragment_personal_dictionary, container, false)
     }
 
@@ -95,11 +103,14 @@ class DictionaryFragment : Fragment(), DictionaryView {
         )
         val ith = ItemTouchHelper(swipeActionCallback)
         ith.attachToRecyclerView(rvDictionary)
+        snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)
+
+        events().subscribe(events)
     }
 
     override fun onResume() {
         super.onResume()
-        disposable = presenter.start().observeOn(AndroidSchedulers.mainThread()).subscribe(::render)
+        disposable = presenter.states.observeOn(AndroidSchedulers.mainThread()).subscribe(::render)
     }
 
     override fun onPause() {
@@ -133,6 +144,44 @@ class DictionaryFragment : Fragment(), DictionaryView {
         adapter.update(viewState.dictionary)
         g_personaldict_empty.isInvisible = viewState.dictionary.isNotEmpty()
         g_personaldict_empty.requestLayout()
+        renderSnackbar(viewState.snackbar)
+    }
+
+    private fun renderSnackbar(viewState: SnackbarViewState) {
+        Log.d("RenderSnackBar", "$viewState")
+        when (viewState) {
+            is SnackbarViewState.WordRemoved -> {
+                snackbar.setText("Word '${viewState.word}' was removed.")
+                snackbar.setAction(R.string.snackbar_undo) { undoRemove(viewState.wordId) }
+                snackbar.show()
+            }
+            is SnackbarViewState.RemoveFailed -> {
+                snackbar.setText("Failed to remove word, ${viewState.wordException}")
+                adapter.notifyDataSetChanged()
+                snackbar.show()
+            }
+            is SnackbarViewState.Hidden -> {
+                snackbar.dismiss()
+            }
+            is SnackbarViewState.WordBlacklisted -> {
+                snackbar.setText("Word '${viewState.word}' was blacklisted.")
+                snackbar.setAction(R.string.snackbar_undo) { undoBlacklist(viewState.wordId) }
+                snackbar.show()
+            }
+            is SnackbarViewState.BlacklistFailed -> {
+                snackbar.setText("Failed to remove word, ${viewState.blacklistException}")
+                adapter.notifyDataSetChanged()
+                snackbar.show()
+            }
+        }
+    }
+
+    private fun undoRemove(wordId: Long) {
+        events.onNext(DictionaryEvent.OnUndoRemoveEvent(wordId))
+    }
+
+    private fun undoBlacklist(wordId: Long) {
+        events.onNext(DictionaryEvent.OnUndoBlacklistEvent(wordId))
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -152,7 +201,9 @@ class DictionaryFragment : Fragment(), DictionaryView {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun events(): Observable<DictionaryEvent> {
+    override val events: PublishSubject<DictionaryEvent> = PublishSubject.create()
+
+    private fun events(): Observable<DictionaryEvent> {
         return Observable.merge(
                 adapter.events().map {
                     when (it) {
@@ -164,15 +215,13 @@ class DictionaryFragment : Fragment(), DictionaryView {
                 swipeActionCallback.swipes().map {
                     when (it) {
                         is SwipeEvent.SwipeLeft -> {
-                            val wordId = adapter.items[it.viewHolder.adapterPosition].wordId
-                            DictionaryEvent.OnBlacklistEvent(wordId)
+                            val word = adapter.items[it.viewHolder.adapterPosition]
+                            DictionaryEvent.OnBlacklistEvent(word.wordId, word.word)
                         }
-
                         is SwipeEvent.SwipeRight -> {
-                            val wordId = adapter.items[it.viewHolder.adapterPosition].wordId
-                            DictionaryEvent.OnRemoveEvent(wordId)
+                            val word = adapter.items[it.viewHolder.adapterPosition]
+                            DictionaryEvent.OnRemoveEvent(word.wordId, word.word)
                         }
-
                     }
                 }
         )

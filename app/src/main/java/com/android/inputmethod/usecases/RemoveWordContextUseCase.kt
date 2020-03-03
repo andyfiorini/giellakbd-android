@@ -8,3 +8,4 @@ class RemoveWordContextUseCase(val database: PersonalDictionaryDatabase) {
                 .removeContext(wordContextId)
     }
 }
+
