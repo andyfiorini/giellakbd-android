@@ -74,24 +74,24 @@ class DictionaryFragment : Fragment(), DictionaryView {
         val paint = TextPaint().apply {
             color = Color.WHITE
             isAntiAlias = true
-            val textSizePixel = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18f, resources.displayMetrics)
+            val textSizePixel = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16f, resources.displayMetrics)
             textSize = textSizePixel
         }
 
         val ith = ItemTouchHelper(
                 SwipeActionCallback(
                         SwipeConf(
-                                SwipeActionConf(
+                                left = SwipeActionConf(
+                                        resources.getDrawable(R.drawable.vd_blacklist, activity?.theme),
+                                        resources.getString(R.string.block_word),
+                                        paint,
+                                        ColorDrawable(ContextCompat.getColor(context!!, R.color.colorBlock))
+                                ),
+                                right = SwipeActionConf(
                                         resources.getDrawable(R.drawable.vd_delete, activity?.theme),
                                         resources.getString(R.string.delete_word),
                                         paint,
                                         ColorDrawable(ContextCompat.getColor(context!!, R.color.colorDelete))
-                                ),
-                                SwipeActionConf(
-                                        resources.getDrawable(R.drawable.vd_blacklist, activity?.theme),
-                                        "Block",
-                                        paint,
-                                        ColorDrawable(ContextCompat.getColor(context!!, R.color.colorBlock))
                                 )
                         )
                 )
