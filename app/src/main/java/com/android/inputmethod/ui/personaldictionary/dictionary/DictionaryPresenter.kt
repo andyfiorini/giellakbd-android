@@ -1,9 +1,9 @@
 package com.android.inputmethod.ui.personaldictionary.dictionary
 
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewState
-import com.android.inputmethod.usecases.SetBlacklistUseCase
 import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.usecases.RemoveWordUseCase
+import com.android.inputmethod.usecases.SetBlacklistUseCase
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import no.divvun.dictionary.personal.DictionaryWord
@@ -16,8 +16,6 @@ class DictionaryPresenter(
         private val blacklistWordUseCase: SetBlacklistUseCase
 ) {
     private val initialViewState: DictionaryViewState = DictionaryViewState()
-
-    val states by lazy { start() }
 
     fun start(): Observable<DictionaryViewState> {
         return Observable.merge(
@@ -32,11 +30,9 @@ class DictionaryPresenter(
                         }
                     }
                 })
-                .replay(1)
-                .autoConnect()
     }
 
-    private val uiTransformer = ObservableTransformer<DictionaryEvent, DictionaryUpdate> { it ->
+    private val uiTransformer = ObservableTransformer<DictionaryEvent, DictionaryUpdate> {
         it.flatMap { dictionaryEvent ->
             when (dictionaryEvent) {
                 is DictionaryEvent.OnWordSelected -> {
@@ -56,7 +52,6 @@ class DictionaryPresenter(
     }
 
 }
-
 
 sealed class DictionaryUpdate {
     data class Dictionary(val words: List<DictionaryWord>) : DictionaryUpdate()

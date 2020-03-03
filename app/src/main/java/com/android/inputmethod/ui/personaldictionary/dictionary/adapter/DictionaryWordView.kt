@@ -28,10 +28,6 @@ class DictionaryWordView(context: Context, attr: AttributeSet?, style: Int) : Co
 
 
     override fun events(): Observable<DictionaryWordEvent> {
-        return Observable.merge(
-                tv_dictitem_word.clicks().map { DictionaryWordEvent.PressEvent(viewState.wordId, viewState.word) },
-                iv_dictitem_blacklist.clicks().map { DictionaryWordEvent.BlacklistEvent(viewState.wordId) },
-                iv_dictitem_remove.clicks().map { DictionaryWordEvent.RemoveEvent(viewState.wordId) }
-        )
+        return tv_dictitem_word.clicks().map { DictionaryWordEvent.PressEvent(viewState.wordId, viewState.word) }
     }
 }

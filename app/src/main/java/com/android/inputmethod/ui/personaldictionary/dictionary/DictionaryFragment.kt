@@ -15,10 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
-import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
-import com.android.inputmethod.ui.components.recycleradapter.SwipeActionCallback
-import com.android.inputmethod.ui.components.recycleradapter.SwipeActionConf
-import com.android.inputmethod.ui.components.recycleradapter.SwipeConf
+import com.android.inputmethod.ui.components.recycleradapter.*
 import com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg
 import com.android.inputmethod.ui.personaldictionary.blacklist.BlacklistNavArg
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordEvent
@@ -46,6 +43,8 @@ class DictionaryFragment : Fragment(), DictionaryView {
 
     private val args by navArgs<DictionaryFragmentArgs>()
     override val languageId by lazy { args.dictionaryNavArg.languageId }
+
+    private lateinit var swipeActionCallback: SwipeActionCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,30 +77,29 @@ class DictionaryFragment : Fragment(), DictionaryView {
             textSize = textSizePixel
         }
 
-        val ith = ItemTouchHelper(
-                SwipeActionCallback(
-                        SwipeConf(
-                                left = SwipeActionConf(
-                                        resources.getDrawable(R.drawable.vd_blacklist, activity?.theme),
-                                        resources.getString(R.string.block_word),
-                                        paint,
-                                        ColorDrawable(ContextCompat.getColor(context!!, R.color.colorBlock))
-                                ),
-                                right = SwipeActionConf(
-                                        resources.getDrawable(R.drawable.vd_delete, activity?.theme),
-                                        resources.getString(R.string.delete_word),
-                                        paint,
-                                        ColorDrawable(ContextCompat.getColor(context!!, R.color.colorDelete))
-                                )
+        swipeActionCallback = SwipeActionCallback(
+                SwipeConf(
+                        left = SwipeActionConf(
+                                resources.getDrawable(R.drawable.vd_blacklist, activity?.theme),
+                                resources.getString(R.string.block_word),
+                                paint,
+                                ColorDrawable(ContextCompat.getColor(context!!, R.color.colorBlock))
+                        ),
+                        right = SwipeActionConf(
+                                resources.getDrawable(R.drawable.vd_delete, activity?.theme),
+                                resources.getString(R.string.delete_word),
+                                paint,
+                                ColorDrawable(ContextCompat.getColor(context!!, R.color.colorDelete))
                         )
                 )
         )
+        val ith = ItemTouchHelper(swipeActionCallback)
         ith.attachToRecyclerView(rvDictionary)
     }
 
     override fun onResume() {
         super.onResume()
-        disposable = presenter.states.observeOn(AndroidSchedulers.mainThread()).subscribe(::render)
+        disposable = presenter.start().observeOn(AndroidSchedulers.mainThread()).subscribe(::render)
     }
 
     override fun onPause() {
@@ -155,18 +153,28 @@ class DictionaryFragment : Fragment(), DictionaryView {
     }
 
     override fun events(): Observable<DictionaryEvent> {
-        return adapter.events().map {
-            when (it) {
-                is DictionaryWordEvent.PressEvent -> {
-                    DictionaryEvent.OnWordSelected(it.wordId, it.word)
+        return Observable.merge(
+                adapter.events().map {
+                    when (it) {
+                        is DictionaryWordEvent.PressEvent -> {
+                            DictionaryEvent.OnWordSelected(it.wordId, it.word)
+                        }
+                    }
+                },
+                swipeActionCallback.swipes().map {
+                    when (it) {
+                        is SwipeEvent.SwipeLeft -> {
+                            val wordId = adapter.items[it.viewHolder.adapterPosition].wordId
+                            DictionaryEvent.OnBlacklistEvent(wordId)
+                        }
+
+                        is SwipeEvent.SwipeRight -> {
+                            val wordId = adapter.items[it.viewHolder.adapterPosition].wordId
+                            DictionaryEvent.OnRemoveEvent(wordId)
+                        }
+
+                    }
                 }
-                is DictionaryWordEvent.RemoveEvent -> {
-                    DictionaryEvent.OnRemoveEvent(it.wordId)
-                }
-                is DictionaryWordEvent.BlacklistEvent -> {
-                    DictionaryEvent.OnBlacklistEvent(it.wordId)
-                }
-            }
-        }
+        )
     }
 }

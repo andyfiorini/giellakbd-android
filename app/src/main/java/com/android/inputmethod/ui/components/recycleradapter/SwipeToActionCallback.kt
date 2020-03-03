@@ -10,6 +10,10 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding3.internal.checkMainThread
+import io.reactivex.Observable
+import io.reactivex.Observer
+import io.reactivex.android.MainThreadDisposable
 
 
 data class SwipeConf(
@@ -35,10 +39,19 @@ data class SwipeActionConf(
         val background: ColorDrawable
 )
 
+interface OnSwipeListener {
+    fun onSwipeLeft(viewHolder: RecyclerView.ViewHolder)
+    fun onSwipeRight(viewHolder: RecyclerView.ViewHolder)
+
+}
+
+
 class SwipeActionCallback(swipeConf: SwipeConf) : ItemTouchHelper.SimpleCallback(0, swipeConf.swipeDirs.fold(0, { a, b -> a or b })) {
 
     private lateinit var leftConf: SwipeActionConf
     private lateinit var rightConf: SwipeActionConf
+
+    private var listener: OnSwipeListener? = null
 
     init {
         swipeConf.left?.let {
@@ -53,15 +66,17 @@ class SwipeActionCallback(swipeConf: SwipeConf) : ItemTouchHelper.SimpleCallback
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         when (direction) {
             ItemTouchHelper.LEFT -> {
-                viewHolder.itemId
-                viewHolder.adapterPosition
-                Log.d("SwipeToActionCallback", "SWIPE LEFT1")
+                listener?.onSwipeLeft(viewHolder)
 
             }
             ItemTouchHelper.RIGHT -> {
-                Log.d("SwipeToActionCallback", "SWIPE RIGHT")
+                listener?.onSwipeRight(viewHolder)
             }
         }
+    }
+
+    fun setOnSwipeListener(listener: OnSwipeListener?) {
+        this.listener = listener
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -72,42 +87,50 @@ class SwipeActionCallback(swipeConf: SwipeConf) : ItemTouchHelper.SimpleCallback
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         val itemView: View = viewHolder.itemView
 
+        Log.d("LeftSwipe", "dX: $dX, dY: $dY actionState: $actionState active: $isCurrentlyActive")
         when {
             dX > 0 -> {
                 // Swiping to the right
+                val canvasRight = dX.toInt() + itemView.left
+                c.clipRect(itemView.left, itemView.top, canvasRight, itemView.bottom)
+
+                // Draw background
+                rightConf.background.setBounds(itemView.left, itemView.top, canvasRight, itemView.bottom)
+                rightConf.background.draw(c)
+
+                // Draw icon
                 val drawable = rightConf.icon
                 val bounds = drawableRightSwipeBounds(itemView, drawable)
                 val margin: Int = (itemView.height - drawable.intrinsicHeight) / 2
                 drawable.bounds = bounds
 
-                val canvasRight = dX.toInt() + itemView.left
-                rightConf.background.setBounds(itemView.left, itemView.top, canvasRight, itemView.bottom)
-
-                val textY = rightConf.textPaint.yCenteredOn(drawable)
+                // Draw text
+                val textY = rightConf.textPaint.yCenteredOn(itemView)
                 val textX = bounds.right.toFloat() + margin
+                c.drawText(rightConf.text, textX, textY, rightConf.textPaint)
 
                 // Clip based on itemView
-                c.clipRect(itemView.left, itemView.top, canvasRight, itemView.bottom)
-                rightConf.background.draw(c)
                 drawable.draw(c)
-                c.drawText(rightConf.text, textX, textY, rightConf.textPaint)
             }
             dX < 0 -> {
                 // Swiping to the left
+                val canvasLeft = itemView.right + dX.toInt()
+                c.clipRect(canvasLeft, itemView.top, itemView.right, itemView.bottom)
+
+                // Draw background
+                leftConf.background.setBounds(canvasLeft, itemView.top, itemView.right, itemView.bottom)
+                leftConf.background.draw(c)
+
+                // Draw icon
                 val drawable = leftConf.icon
                 val bounds = drawableLeftSwipeBounds(itemView, drawable)
                 val margin: Int = (itemView.height - drawable.intrinsicHeight) / 2
                 drawable.bounds = bounds
-
-                val canvasLeft = itemView.right + dX.toInt()
-                leftConf.background.setBounds(canvasLeft, itemView.top, itemView.right, itemView.bottom)
-
-                val textY = leftConf.textPaint.yCenteredOn(drawable)
-                val textX = drawable.bounds.left - leftConf.textPaint.measureText(leftConf.text) - margin
-
-                c.clipRect(canvasLeft, itemView.top, itemView.right, itemView.bottom)
-                leftConf.background.draw(c)
                 drawable.draw(c)
+
+                // Draw text
+                val textY = leftConf.textPaint.yCenteredOn(itemView)
+                val textX = drawable.bounds.left - leftConf.textPaint.measureText(leftConf.text) - margin
                 c.drawText(leftConf.text, textX, textY, leftConf.textPaint)
             }
             else -> { // view is unSwiped
@@ -115,7 +138,6 @@ class SwipeActionCallback(swipeConf: SwipeConf) : ItemTouchHelper.SimpleCallback
             }
         }
     }
-
 
     private fun drawableRightSwipeBounds(itemView: View, drawable: Drawable): Rect {
         val margin: Int = (itemView.height - drawable.intrinsicHeight) / 2
@@ -137,8 +159,54 @@ class SwipeActionCallback(swipeConf: SwipeConf) : ItemTouchHelper.SimpleCallback
         return Rect(left, top, right, bottom)
     }
 
-    private fun Paint.yCenteredOn(drawable: Drawable): Float {
-        return drawable.bounds.top + drawable.bounds.height() / 2 - (descent() + ascent()) / 2
+    private fun Paint.yCenteredOn(view: View): Float {
+        return view.top + view.height / 2 - (descent() + ascent()) / 2
     }
 
 }
+
+sealed class SwipeEvent {
+    data class SwipeLeft(val viewHolder: RecyclerView.ViewHolder) : SwipeEvent()
+    data class SwipeRight(val viewHolder: RecyclerView.ViewHolder) : SwipeEvent()
+}
+
+fun SwipeActionCallback.swipes(): Observable<SwipeEvent> {
+    return ViewClickObservable(this)
+}
+
+private class ViewClickObservable(
+        private val swipeActionCallback: SwipeActionCallback
+) : Observable<SwipeEvent>() {
+
+    override fun subscribeActual(observer: Observer<in SwipeEvent>) {
+        if (!checkMainThread(observer)) {
+            return
+        }
+        val listener = Listener(swipeActionCallback, observer)
+        observer.onSubscribe(listener)
+        swipeActionCallback.setOnSwipeListener(listener)
+    }
+
+    private class Listener(
+            private val actionCallback: SwipeActionCallback,
+            private val observer: Observer<in SwipeEvent>
+    ) : MainThreadDisposable(), OnSwipeListener {
+
+        override fun onSwipeLeft(viewHolder: RecyclerView.ViewHolder) {
+            if (!isDisposed) {
+                observer.onNext(SwipeEvent.SwipeLeft(viewHolder))
+            }
+        }
+
+        override fun onSwipeRight(viewHolder: RecyclerView.ViewHolder) {
+            if (!isDisposed) {
+                observer.onNext(SwipeEvent.SwipeRight(viewHolder))
+            }
+        }
+
+        override fun onDispose() {
+            actionCallback.setOnSwipeListener(null)
+        }
+    }
+}
+

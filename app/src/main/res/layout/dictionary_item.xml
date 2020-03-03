@@ -21,40 +21,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Sampleword"
         />
-
-    <ImageView
-        android:id="@+id/iv_dictitem_blacklist"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:alpha="0.3"
-        android:background="?android:selectableItemBackground"
-        android:contentDescription="@string/delete_word"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:padding="8dp"
-        android:src="@drawable/vd_blacklist"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/iv_dictitem_remove"
-        app:layout_constraintStart_toEndOf="@id/tv_dictitem_word"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <ImageView
-        android:id="@+id/iv_dictitem_remove"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:alpha="0.3"
-        android:background="?android:selectableItemBackground"
-        android:contentDescription="@string/delete_word"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:padding="8dp"
-        android:src="@drawable/vd_delete"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/iv_dictitem_blacklist"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Sampleword"
-        />
-
 </merge>
