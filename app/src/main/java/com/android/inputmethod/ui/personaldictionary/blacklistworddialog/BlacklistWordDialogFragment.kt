@@ -17,7 +17,6 @@ import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.dialog_add_word.*
 import kotlinx.android.synthetic.main.dialog_blacklist_word.*
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
@@ -62,7 +61,7 @@ class BlacklistWordDialogFragment : DialogFragment(), BlacklistWordDialogView {
 
     override fun onStart() {
         super.onStart()
-        tiet_addword.showSoftKeyboard()
+        tiet_blacklistword.showSoftKeyboard()
     }
 
     override fun onResume() {
