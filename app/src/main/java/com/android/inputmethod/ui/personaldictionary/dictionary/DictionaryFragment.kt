@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.TextPaint
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import androidx.core.content.ContextCompat
@@ -47,6 +46,8 @@ class DictionaryFragment : Fragment(), DictionaryView {
     private val args by navArgs<DictionaryFragmentArgs>()
     override val languageId by lazy { args.dictionaryNavArg.languageId }
 
+    override val events: PublishSubject<DictionaryEvent> = PublishSubject.create()
+
     private lateinit var swipeActionCallback: SwipeActionCallback
     private lateinit var snackbar: Snackbar
 
@@ -58,13 +59,9 @@ class DictionaryFragment : Fragment(), DictionaryView {
         val removeWordUseCase = SoftDeleteWordUseCase(database)
         val blacklistWordUseCase = SetBlacklistUseCase(database)
         presenter = DictionaryPresenter(this, dictionaryUseCase, removeWordUseCase, blacklistWordUseCase)
-
-        Log.d("swipeActionCallback", "onCreate")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        Log.d("swipeActionCallback", "onCreateView")
         return inflater.inflate(R.layout.fragment_personal_dictionary, container, false)
     }
 
@@ -148,7 +145,6 @@ class DictionaryFragment : Fragment(), DictionaryView {
     }
 
     private fun renderSnackbar(viewState: SnackbarViewState) {
-        Log.d("RenderSnackBar", "$viewState")
         when (viewState) {
             is SnackbarViewState.WordRemoved -> {
                 snackbar.setText("Word '${viewState.word}' was removed.")
@@ -157,8 +153,9 @@ class DictionaryFragment : Fragment(), DictionaryView {
             }
             is SnackbarViewState.RemoveFailed -> {
                 snackbar.setText("Failed to remove word, ${viewState.wordException}")
-                adapter.notifyDataSetChanged()
+                snackbar.setAction(null, null)
                 snackbar.show()
+                adapter.notifyDataSetChanged()
             }
             is SnackbarViewState.Hidden -> {
                 snackbar.dismiss()
@@ -170,8 +167,9 @@ class DictionaryFragment : Fragment(), DictionaryView {
             }
             is SnackbarViewState.BlacklistFailed -> {
                 snackbar.setText("Failed to remove word, ${viewState.blacklistException}")
-                adapter.notifyDataSetChanged()
+                snackbar.setAction(null, null)
                 snackbar.show()
+                adapter.notifyDataSetChanged()
             }
         }
     }
@@ -201,7 +199,6 @@ class DictionaryFragment : Fragment(), DictionaryView {
         return super.onOptionsItemSelected(item)
     }
 
-    override val events: PublishSubject<DictionaryEvent> = PublishSubject.create()
 
     private fun events(): Observable<DictionaryEvent> {
         return Observable.merge(
