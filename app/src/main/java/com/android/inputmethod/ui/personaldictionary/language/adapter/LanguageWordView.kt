@@ -28,9 +28,6 @@ class LanguageWordView(context: Context, attr: AttributeSet?, style: Int) : Cons
 
 
     override fun events(): Observable<LanguageWordEvent> {
-        return Observable.merge(
-                tv_langitem_lang.clicks().map { LanguageWordEvent.PressEvent(viewState.languageId, viewState.language) },
-                iv_langitem_remove.clicks().map { LanguageWordEvent.RemoveEvent(viewState.languageId) }
-        )
+        return tv_langitem_lang.clicks().map { LanguageWordEvent.PressEvent(viewState.languageId, viewState.language) }
     }
 }

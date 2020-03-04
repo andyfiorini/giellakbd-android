@@ -85,9 +85,6 @@ class LanguageFragment : Fragment(), LanguageView {
                 is LanguageWordEvent.PressEvent -> {
                     LanguageEvent.OnLanguageSelected(it.languageId, it.language)
                 }
-                is LanguageWordEvent.RemoveEvent -> {
-                    LanguageEvent.OnRemoveEvent(it.languageId)
-                }
             }
         }
     }

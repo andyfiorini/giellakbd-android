@@ -17,8 +17,8 @@ class LanguagePresenter(
 
     fun start(): Observable<LanguageViewState> {
         return Observable.merge(
-                languageUseCase.execute().map { LanguageUpdate.Lang(it) },
-                view.events().compose(uiTransformer))
+                        languageUseCase.execute().map { LanguageUpdate.Lang(it) },
+                        view.events().compose(uiTransformer))
                 .scan(initialViewState, { state: LanguageViewState, event: LanguageUpdate ->
                     when (event) {
                         is LanguageUpdate.Lang -> {
@@ -38,9 +38,6 @@ class LanguagePresenter(
                 is LanguageEvent.OnLanguageSelected -> {
                     view.navigateToDictionary(languageEvent.languageId, languageEvent.language)
                     Observable.empty<LanguageUpdate>()
-                }
-                is LanguageEvent.OnRemoveEvent -> {
-                    Observable.empty()
                 }
             }
         }

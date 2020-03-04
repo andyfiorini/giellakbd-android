@@ -14,29 +14,11 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/iv_langitem_remove"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Sampleword"
-        />
-
-
-    <ImageView
-        android:id="@+id/iv_langitem_remove"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:alpha="0.3"
-        android:background="?android:selectableItemBackground"
-        android:contentDescription="@string/delete_word"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:padding="8dp"
-        android:src="@drawable/vd_delete"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_langitem_lang"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Sampleword"
         />
