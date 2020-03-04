@@ -63,12 +63,11 @@ interface DictionaryDao {
     @Update
     fun updateWordS(word: DictionaryWord): Single<Int>
 
-    @Transaction
-    fun blacklistWord(wordId: Long, blacklist: Boolean): Int {
-        val dictionaryWord = findWord(wordId).first()
-        val updatedWord = dictionaryWord.copy(blacklisted = blacklist)
-        return updateWord(updatedWord)
-    }
+    @Query("UPDATE words SET blacklisted = :blacklist WHERE word_id=:wordId")
+    fun blacklistWord(wordId: Long, blacklist: Boolean): Single<Int>
+
+    @Query("UPDATE words SET softDeleted = :softDelete WHERE word_id=:wordId")
+    fun softDeleteWord(wordId: Long, softDelete: Boolean): Single<Int>
 
     @Transaction
     fun insertContext(languageId: Long, word: String, prevWords: List<String>, nextWords: List<String>): Long {
@@ -81,14 +80,12 @@ interface DictionaryDao {
     @Update
     fun updateContext(word: WordContext): Int
 
-
     @Transaction
     fun updateContext(contextId: Long, prevWords: List<String>, nextWords: List<String>) {
         val oldContext = findContext(contextId).first()
         val updatedContext = oldContext.copy(prevWords = prevWords, nextWords = nextWords)
         updateContext(updatedContext)
     }
-
 
     @Insert
     fun insertContext(wordContext: WordContext): Long
@@ -99,23 +96,15 @@ interface DictionaryDao {
     @Query("SELECT * FROM word_contexts WHERE word_context_id == :contextId")
     fun findContext(contextId: Long): List<WordContext>
 
-    @Transaction
-    fun incWord(languageId: Long, word: String): Int {
-        val dictionaryWord = findWord(languageId, word).firstOrNull() ?: return 0
-        return updateWord(dictionaryWord.copy(typeCount = dictionaryWord.typeCount.inc()))
-    }
+    @Query("UPDATE words SET typeCount = typeCount + 1 WHERE language_id=:languageId AND word=:word")
+    fun incWord(languageId: Long, word: String): Int
 
-    @Transaction
-    fun decWord(languageId: Long, word: String): Int {
-        val dictionaryWord = findWord(languageId, word).firstOrNull() ?: return 0
-        return updateWord(dictionaryWord.copy(typeCount = dictionaryWord.typeCount.dec()))
-    }
+    @Query("UPDATE words SET typeCount = typeCount - 1 WHERE language_id=:languageId AND word=:word")
+    fun decWord(languageId: Long, word: String): Int
 
-    @Transaction
     @Query("SELECT * FROM words WHERE language_id = :languageId AND softDeleted=0")
     fun dictionaryWithContexts(languageId: Long): Observable<List<WordWithContext>>
 
-    @Transaction
     @Query("SELECT * FROM words WHERE word_id = :wordId AND softDeleted=0")
     fun wordWithContext(wordId: Long): Observable<WordWithContext>
 

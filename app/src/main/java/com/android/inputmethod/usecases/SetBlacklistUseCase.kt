@@ -8,17 +8,8 @@ import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 class SetBlacklistUseCase(val database: PersonalDictionaryDatabase) {
     fun execute(wordId: Long, blacklist: Boolean): Single<Either<BlacklistWordException, BlacklistWordSuccess>> {
         return database.dictionaryDao()
-                .findWordS(wordId)
-                .doOnSubscribe { database.beginTransaction() }
-                .map {
-                    it.first().copy(blacklisted = blacklist)
-                }.flatMap {
-                    database.dictionaryDao()
-                            .upsertWord(it)
-                            .toSingle { BlacklistWordSuccess }
-                }
-                .doOnSuccess { database.setTransactionSuccessful() }
-                .doFinally { database.endTransaction() }
+                .blacklistWord(wordId, blacklist)
+                .map { BlacklistWordSuccess }
                 .z {
                     BlacklistWordException.Unknown(it)
                 }
