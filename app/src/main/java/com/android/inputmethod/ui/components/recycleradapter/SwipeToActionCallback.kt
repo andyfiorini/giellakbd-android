@@ -17,8 +17,8 @@ import io.reactivex.android.MainThreadDisposable
 
 
 data class SwipeConf(
-        val right: SwipeActionConf?,
-        val left: SwipeActionConf?
+        val right: SwipeActionConf? = null,
+        val left: SwipeActionConf? = null
 ) {
     val swipeDirs: List<Int> = listOfNotNull(
             right?.let { ItemTouchHelper.RIGHT },
