@@ -37,6 +37,6 @@ class WordContextView(context: Context, attr: AttributeSet?, style: Int) : Const
 
 
     override fun events(): Observable<WordContextEvent> {
-        return iv_contextitem_delete.clicks().map { WordContextEvent.Delete(viewState.wordContextId) }
+        return Observable.empty()
     }
 }
