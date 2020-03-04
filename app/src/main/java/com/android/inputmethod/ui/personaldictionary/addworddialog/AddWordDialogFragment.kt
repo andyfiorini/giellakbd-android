@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.android.inputmethod.latin.R
+import com.android.inputmethod.ui.showSoftKeyboard
 import com.android.inputmethod.usecases.AddWordUseCase
 import com.android.inputmethod.usecases.ValidateWordUseCase
 import com.jakewharton.rxbinding3.view.clicks
@@ -45,6 +46,7 @@ class AddWordDialogFragment : DialogFragment(), AddWordDialogView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         b_addword_cancel.setOnClickListener { dismiss() }
+
     }
 
 
@@ -58,6 +60,11 @@ class AddWordDialogFragment : DialogFragment(), AddWordDialogView {
         AddWordViewError.WordAlreadyExists -> resources.getString(R.string.addword_word_exists)
         AddWordViewError.Blacklisted -> resources.getString(R.string.addword_word_blacklisted)
         is AddWordViewError.Unknown -> this.message
+    }
+
+    override fun onStart() {
+        super.onStart()
+        tiet_addword.showSoftKeyboard()
     }
 
     override fun onResume() {

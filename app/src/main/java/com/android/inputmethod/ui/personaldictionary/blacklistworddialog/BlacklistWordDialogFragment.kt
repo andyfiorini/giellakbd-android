@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.android.inputmethod.latin.R
+import com.android.inputmethod.ui.showSoftKeyboard
 import com.android.inputmethod.usecases.BlacklistWordUseCase
 import com.android.inputmethod.usecases.ValidateWordUseCase
 import com.jakewharton.rxbinding3.view.clicks
@@ -16,6 +17,7 @@ import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.dialog_add_word.*
 import kotlinx.android.synthetic.main.dialog_blacklist_word.*
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
@@ -35,6 +37,7 @@ class BlacklistWordDialogFragment : DialogFragment(), BlacklistWordDialogView {
         val validateWordUseCase = ValidateWordUseCase()
         val blacklistWordUseCase = BlacklistWordUseCase(database, validateWordUseCase)
         presenter = BlacklistWordDialogPresenter(this, blacklistWordUseCase, validateWordUseCase)
+        tiet_blacklistword.requestFocus()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,6 +58,11 @@ class BlacklistWordDialogFragment : DialogFragment(), BlacklistWordDialogView {
         BlacklistWordViewError.WordContainsSpace -> resources.getString(R.string.word_error_contains_space)
         BlacklistWordViewError.EmptyWord -> resources.getString(R.string.word_error_empty)
         is BlacklistWordViewError.Unknown -> this.message
+    }
+
+    override fun onStart() {
+        super.onStart()
+        tiet_addword.showSoftKeyboard()
     }
 
     override fun onResume() {
