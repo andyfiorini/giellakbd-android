@@ -40,12 +40,10 @@ class BlacklistPresenter(
         it.flatMap { blacklistEvent ->
             when (blacklistEvent) {
                 is BlacklistEvent.OnRemoveEvent -> {
-                    softDeleteWordUseCase.execute(blacklistEvent.wordId, true)
-                    Observable.empty<BlacklistUpdate>()
+                    softDeleteWordUseCase.execute(blacklistEvent.wordId, true).toObservable().flatMap { Observable.empty<BlacklistUpdate>() }
                 }
                 is BlacklistEvent.OnAllowEvent -> {
-                    blacklistWordUseCase.execute(blacklistEvent.wordId, false)
-                    Observable.empty()
+                    blacklistWordUseCase.execute(blacklistEvent.wordId, false).toObservable().flatMap { Observable.empty<BlacklistUpdate>() }
                 }
             }
         }
