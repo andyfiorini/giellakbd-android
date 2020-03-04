@@ -23,14 +23,11 @@ class BlacklistWordView(context: Context, attr: AttributeSet?, style: Int) : Con
 
     fun update(viewState: BlacklistWordViewState) {
         this.viewState = viewState
-        tv_dictitem_word.text = viewState.word
+        tv_blacklistitem_word.text = viewState.word
     }
 
 
     override fun events(): Observable<BlacklistWordEvent> {
-        return Observable.merge(
-                iv_dictitem_blacklist.clicks().map { BlacklistWordEvent.AllowEvent(viewState.wordId) },
-                iv_dictitem_remove.clicks().map { BlacklistWordEvent.RemoveEvent(viewState.wordId) }
-        )
+        return Observable.empty()
     }
 }

@@ -6,7 +6,7 @@ interface BlacklistView {
     val languageId: Long
 
     fun render(viewState: BlacklistViewState)
-    fun events(): Observable<BlacklistEvent>
+    val events: Observable<BlacklistEvent>
 
     fun navigateToBlacklistWordDialogFragment(languageId: Long)
 }

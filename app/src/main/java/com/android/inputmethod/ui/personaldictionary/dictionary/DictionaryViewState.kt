@@ -6,7 +6,7 @@ import com.android.inputmethod.usecases.RemoveWordException
 
 data class DictionaryViewState(
         val dictionary: List<DictionaryWordViewState> = emptyList(),
-        val snackbar: SnackbarViewState = SnackbarViewState.Hidden(0)
+        val snackbar: SnackbarViewState = SnackbarViewState.Hidden
 )
 
 sealed class SnackbarViewState(open val wordId: Long) {
@@ -14,5 +14,5 @@ sealed class SnackbarViewState(open val wordId: Long) {
     data class RemoveFailed(override val wordId: Long, val wordException: RemoveWordException) : SnackbarViewState(wordId)
     data class WordBlacklisted(override val wordId: Long, val word: String) : SnackbarViewState(wordId)
     data class BlacklistFailed(override val wordId: Long, val blacklistException: BlacklistWordException) : SnackbarViewState(wordId)
-    data class Hidden(override val wordId: Long) : SnackbarViewState(wordId)
+    object Hidden : SnackbarViewState(-1)
 }

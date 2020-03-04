@@ -1,5 +1,6 @@
 package com.android.inputmethod.ui.personaldictionary.dictionary
 
+import com.android.inputmethod.ui.SNACKBAR_TIMEOUT_SECONDS
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordViewState
 import com.android.inputmethod.usecases.*
 import io.reactivex.Observable
@@ -16,13 +17,12 @@ class DictionaryPresenter(
 ) {
     private val initialViewState: DictionaryViewState = DictionaryViewState()
 
-    private val SNACKBAR_TIMEOUT_SECONDS = 5L
     val states by lazy { start() }
 
     fun start(): Observable<DictionaryViewState> {
         return Observable.merge(
-                dictionaryUseCase.execute(view.languageId).map { DictionaryUpdate.Dictionary(it) },
-                view.events.compose(uiTransformer))
+                        dictionaryUseCase.execute(view.languageId).map { DictionaryUpdate.Dictionary(it) },
+                        view.events.compose(uiTransformer))
                 .scan(initialViewState, { state: DictionaryViewState, event: DictionaryUpdate ->
                     when (event) {
                         is DictionaryUpdate.Dictionary -> {
@@ -46,7 +46,7 @@ class DictionaryPresenter(
                         )
                         is DictionaryUpdate.SnackbarTimedOut -> {
                             if (state.snackbar.wordId == event.wordId) {
-                                state.copy(snackbar = SnackbarViewState.Hidden(event.wordId))
+                                state.copy(snackbar = SnackbarViewState.Hidden)
                             } else {
                                 state
                             }
