@@ -115,6 +115,7 @@ class BlacklistFragment : Fragment(), BlacklistView {
 
     override fun onPause() {
         super.onPause()
+        snackbar.dismiss()
         disposable.dispose()
     }
 

@@ -39,22 +39,22 @@ interface DictionaryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsertWord(word: DictionaryWord): Completable
 
-    @Query("SELECT * FROM words WHERE word_id = :wordId")
+    @Query("SELECT * FROM words WHERE word_id = :wordId AND softDeleted=0")
     fun findWord(wordId: Long): List<DictionaryWord>
 
-    @Query("SELECT * FROM words WHERE word_id = :wordId")
+    @Query("SELECT * FROM words WHERE word_id = :wordId AND softDeleted=0")
     fun findWordO(wordId: Long): Observable<DictionaryWord>
 
-    @Query("SELECT * FROM words WHERE language_id == :languageId AND word = :word")
+    @Query("SELECT * FROM words WHERE language_id == :languageId AND word = :word AND softDeleted=0")
     fun findWord(languageId: Long, word: String): List<DictionaryWord>
 
-    @Query("SELECT * FROM words WHERE word_id = :wordId")
+    @Query("SELECT * FROM words WHERE word_id = :wordId AND softDeleted=0")
     fun findWordS(wordId: Long): Single<List<DictionaryWord>>
 
-    @Query("SELECT * FROM words WHERE language_id == :languageId AND word = :word")
+    @Query("SELECT * FROM words WHERE language_id == :languageId AND word = :word AND softDeleted=0")
     fun findWordS(languageId: Long, word: String): Single<List<DictionaryWord>>
 
-    @Query("DELETE FROM words WHERE word_id = :wordId")
+    @Query("DELETE FROM words WHERE word_id = :wordId AND softDeleted=0")
     fun removeWord(wordId: Long): Single<Int>
 
     @Update
@@ -96,15 +96,17 @@ interface DictionaryDao {
     @Query("SELECT * FROM word_contexts WHERE word_context_id == :contextId")
     fun findContext(contextId: Long): List<WordContext>
 
-    @Query("UPDATE words SET typeCount = typeCount + 1 WHERE language_id=:languageId AND word=:word")
+    @Query("UPDATE words SET typeCount = typeCount + 1 WHERE language_id=:languageId AND word=:word AND softDeleted=0")
     fun incWord(languageId: Long, word: String): Int
 
-    @Query("UPDATE words SET typeCount = typeCount - 1 WHERE language_id=:languageId AND word=:word")
+    @Query("UPDATE words SET typeCount = typeCount - 1 WHERE language_id=:languageId AND word=:word AND softDeleted=0")
     fun decWord(languageId: Long, word: String): Int
 
+    @Transaction
     @Query("SELECT * FROM words WHERE language_id = :languageId AND softDeleted=0")
     fun dictionaryWithContexts(languageId: Long): Observable<List<WordWithContext>>
 
+    @Transaction
     @Query("SELECT * FROM words WHERE word_id = :wordId AND softDeleted=0")
     fun wordWithContext(wordId: Long): Observable<WordWithContext>
 

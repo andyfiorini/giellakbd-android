@@ -1,6 +1,5 @@
 package com.android.inputmethod.usecases
 
-import android.database.sqlite.SQLiteConstraintException
 import arrow.core.Either
 import arrow.core.left
 import com.lenguyenthanh.rxarrow.z
@@ -19,16 +18,29 @@ class AddWordUseCase(
                         Single.just(AddWordException.Validation(it).left())
                     }, {
                         database.dictionaryDao()
-                                .insertWord(DictionaryWord(word, 0, true, languageId = languageId))
-                                .toSingle { AddWordSuccess }
-                                .z {
-                                    when (it) {
-                                        is SQLiteConstraintException -> {
-                                            AddWordException.WordAlreadyExists(it)
+                                .findWordS(languageId, word)
+                                .flatMap {
+                                    if (it.isEmpty()) {
+                                        database.dictionaryDao().insertWord(DictionaryWord(word, 0, true, languageId = languageId)).toSingle { AddWordSuccess }
+                                                .z {
+                                                    AddWordException.Unknown(it)
+                                                }
+                                    } else {
+                                        val dictionaryWord = it.first()
+                                        when {
+                                            dictionaryWord.blacklisted -> {
+                                                Single.just(AddWordException.WordBlacklisted.left())
+                                            }
+                                            dictionaryWord.softDeleted -> {
+                                                database.dictionaryDao().upsertWord(DictionaryWord(word, 0, true, languageId = languageId)).toSingle { AddWordSuccess }.z {
+                                                    AddWordException.Unknown(it)
+                                                }
+                                            }
+                                            else -> {
+                                                Single.just(AddWordException.WordAlreadyExists.left())
+                                            }
                                         }
-                                        else -> {
-                                            AddWordException.Unknown(it)
-                                        }
+
                                     }
                                 }
                     })
@@ -39,7 +51,8 @@ class AddWordUseCase(
 
 sealed class AddWordException {
     class Validation(val validationException: ValidationException) : AddWordException()
-    data class WordAlreadyExists(val cause: Throwable) : AddWordException()
+    object WordAlreadyExists : AddWordException()
+    object WordBlacklisted : AddWordException()
     data class Unknown(val cause: Throwable) : AddWordException()
 }
 

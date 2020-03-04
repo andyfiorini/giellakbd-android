@@ -12,6 +12,7 @@ sealed class AddWordViewError {
     object WordContainsSpace : AddWordViewError()
     object EmptyWord : AddWordViewError()
     object WordAlreadyExists : AddWordViewError()
+    object Blacklisted : AddWordViewError()
     data class Unknown(val message: String) : AddWordViewError()
 }
 
@@ -21,6 +22,7 @@ fun AddWordException.toAddWordError(): AddWordViewError =
             is AddWordException.WordAlreadyExists -> AddWordViewError.WordAlreadyExists
             is AddWordException.Unknown -> AddWordViewError.Unknown(cause.message
                     ?: "Unknown error")
+            AddWordException.WordBlacklisted -> AddWordViewError.Blacklisted
         }
 
 fun ValidationException.toAddWordError(): AddWordViewError = when (this) {

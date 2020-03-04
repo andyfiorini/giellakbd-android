@@ -119,6 +119,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
     override fun onPause() {
         super.onPause()
         disposable.dispose()
+        snackbar.dismiss()
     }
 
     override fun navigateToWordFragment(wordId: Long, word: String) {

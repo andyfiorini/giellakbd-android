@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Language::class, Candidate::class, DictionaryWord::class, WordContext::class], version = 2, exportSchema = false)
+@Database(entities = [Language::class, Candidate::class, DictionaryWord::class, WordContext::class], version = 3, exportSchema = false)
 abstract class PersonalDictionaryDatabase : RoomDatabase() {
     companion object {
 

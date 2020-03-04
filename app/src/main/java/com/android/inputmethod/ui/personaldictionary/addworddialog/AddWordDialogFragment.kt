@@ -56,6 +56,7 @@ class AddWordDialogFragment : DialogFragment(), AddWordDialogView {
         AddWordViewError.WordContainsSpace -> resources.getString(R.string.word_error_contains_space)
         AddWordViewError.EmptyWord -> resources.getString(R.string.word_error_empty)
         AddWordViewError.WordAlreadyExists -> resources.getString(R.string.addword_word_exists)
+        AddWordViewError.Blacklisted -> resources.getString(R.string.addword_word_blacklisted)
         is AddWordViewError.Unknown -> this.message
     }
 

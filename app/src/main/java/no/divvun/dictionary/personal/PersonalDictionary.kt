@@ -59,7 +59,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
     }
 
     override fun isInDictionary(word: String): Boolean {
-        return database.dictionaryDao().findWord(languageId, word).isNotEmpty()
+        return database.dictionaryDao().findWord(languageId, word).any { !it.softDeleted }
     }
 
     fun learn(word: String) {
@@ -74,7 +74,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
             Log.d(TAG, "$word was candidate, now in personal dictionary")
             // Word is already candidate, second time typed. Time to add to personal dictionary.
             database.candidatesDao().removeCandidate(languageId, word)
-            database.dictionaryDao().insertWord(DictionaryWord(word, languageId = languageId)).subscribe()
+            database.dictionaryDao().upsertWord(DictionaryWord(word, languageId = languageId)).subscribe()
         } else {
             Log.d(TAG, "$word is new candidate")
             database.candidatesDao().insertCandidate(Candidate(word, languageId = languageId))
