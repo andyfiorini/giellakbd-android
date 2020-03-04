@@ -67,6 +67,7 @@
         android:layout_margin="16dp"
         android:scaleType="center"
         app:srcCompat="@drawable/vd_add"
+        app:tint="@null"
         />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
