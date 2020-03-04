@@ -590,7 +590,7 @@ Tip: You can download and remove dictionaries by going to &lt;b>Languages&#160;&
     <string name="addword_word_blacklisted">Word is blacklisted</string>
     <string name="word_error_contains_space">Word contains space</string>
     <string name="word_error_empty">Word is empty</string>
-    <string name="addword_hint">Add word</string>
+    <string name="addword_hint">Word</string>
     <string name="personallangionary_empty_hint">No personal languages dictionary have been created yet</string>
     <string name="blacklist_empty_hint">No blacklisted words</string>
     <string name="blacklistword_dialog_title">Blacklist Word</string>
