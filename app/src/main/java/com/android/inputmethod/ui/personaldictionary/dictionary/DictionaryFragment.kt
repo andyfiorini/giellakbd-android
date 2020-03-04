@@ -37,6 +37,7 @@ import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 class DictionaryFragment : Fragment(), DictionaryView {
     private lateinit var rvDictionary: RecyclerView
     private lateinit var disposable: Disposable
+    private lateinit var viewDisposable: Disposable
 
     private lateinit var presenter: DictionaryPresenter
 
@@ -102,7 +103,12 @@ class DictionaryFragment : Fragment(), DictionaryView {
         ith.attachToRecyclerView(rvDictionary)
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)
 
-        events().subscribe(events)
+        viewDisposable = events().subscribe{ events.onNext(it) }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDisposable.dispose()
     }
 
     override fun onResume() {
