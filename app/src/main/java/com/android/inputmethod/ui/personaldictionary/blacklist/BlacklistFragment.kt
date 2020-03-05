@@ -1,19 +1,13 @@
 package com.android.inputmethod.ui.personaldictionary.blacklist
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.TextPaint
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
@@ -47,7 +41,7 @@ class BlacklistFragment : Fragment(), BlacklistView {
 
     override val events = PublishSubject.create<BlacklistEvent>()
 
-    private lateinit var swipeActionCallback: SwipeActionCallback
+    private lateinit var swipeCallback: SwipeCallback
     private lateinit var snackbar: Snackbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,32 +68,13 @@ class BlacklistFragment : Fragment(), BlacklistView {
             navigateToBlacklistWordDialogFragment(languageId)
         }
 
-        val paint = TextPaint().apply {
-            color = Color.WHITE
-            isAntiAlias = true
-            val textSizePixel = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16f, resources.displayMetrics)
-            textSize = textSizePixel
-        }
-        swipeActionCallback = SwipeActionCallback(
-                SwipeConf(
-                        left = SwipeActionConf(
-                                resources.getDrawable(R.drawable.vd_allow, activity?.theme),
-                                resources.getString(R.string.allow_word),
-                                paint,
-                                ColorDrawable(ContextCompat.getColor(context!!, R.color.colorAllow))
-                        ),
-                        right = SwipeActionConf(
-                                resources.getDrawable(R.drawable.vd_delete, activity?.theme),
-                                resources.getString(R.string.delete_word),
-                                paint,
-                                ColorDrawable(ContextCompat.getColor(context!!, R.color.colorDelete))
-                        )
-                )
+        swipeCallback = SwipeCallback(
+                SwipeDirection.LEFT to R.layout.swipe_left_allow,
+                SwipeDirection.RIGHT to R.layout.swipe_right_delete
         )
-        val ith = ItemTouchHelper(swipeActionCallback)
-        ith.attachToRecyclerView(rvBlacklist)
-        snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)
+        swipeCallback.attachTo(rvBlacklist)
 
+        snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)
         viewDisposable = events().subscribe { events.onNext(it) }
     }
 
@@ -171,16 +146,17 @@ class BlacklistFragment : Fragment(), BlacklistView {
     }
 
     private fun events(): Observable<BlacklistEvent> {
-        return swipeActionCallback.swipes().map {
-            when (it) {
-                is SwipeEvent.SwipeLeft -> {
+        return swipeCallback.swipes().flatMap {
+            when (it.direction) {
+                SwipeDirection.LEFT -> {
                     val word = adapter.items[it.viewHolder.adapterPosition]
-                    BlacklistEvent.OnAllowEvent(word.wordId, word.word)
+                    Observable.just(BlacklistEvent.OnAllowEvent(word.wordId, word.word))
                 }
-                is SwipeEvent.SwipeRight -> {
+                SwipeDirection.RIGHT -> {
                     val word = adapter.items[it.viewHolder.adapterPosition]
-                    BlacklistEvent.OnRemoveEvent(word.wordId, word.word)
+                    Observable.just(BlacklistEvent.OnRemoveEvent(word.wordId, word.word))
                 }
+                else -> Observable.empty()
             }
         }
     }

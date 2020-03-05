@@ -1,18 +1,12 @@
 package com.android.inputmethod.ui.personaldictionary.word
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.TextPaint
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
@@ -39,7 +33,7 @@ class WordFragment : Fragment(), WordView {
     private val args by navArgs<WordFragmentArgs>()
     override val wordId by lazy { args.wordNavArg.wordId }
 
-    private lateinit var swipeActionCallback: SwipeActionCallback
+    private lateinit var swipeCallback: SwipeCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,30 +53,13 @@ class WordFragment : Fragment(), WordView {
         rvDictionary.layoutManager = LinearLayoutManager(context!!)
         rvDictionary.adapter = adapter
 
-        val paint = TextPaint().apply {
-            color = Color.WHITE
-            isAntiAlias = true
-            val textSizePixel = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16f, resources.displayMetrics)
-            textSize = textSizePixel
-        }
-        swipeActionCallback = SwipeActionCallback(
-                SwipeConf(
-                        right = SwipeActionConf(
-                                resources.getDrawable(R.drawable.vd_delete, activity?.theme),
-                                resources.getString(R.string.delete_word),
-                                paint,
-                                ColorDrawable(ContextCompat.getColor(context!!, R.color.colorDelete))
-                        )
-                )
-        )
-        val ith = ItemTouchHelper(swipeActionCallback)
-        ith.attachToRecyclerView(rvDictionary)
+        swipeCallback = SwipeCallback(SwipeDirection.RIGHT to R.layout.swipe_right_delete)
+        swipeCallback.attachTo(rvDictionary)
     }
 
     override fun onResume() {
         super.onResume()
         disposable = presenter.start().observeOn(AndroidSchedulers.mainThread()).subscribe(::render)
-
     }
 
     override fun onPause() {
@@ -91,13 +68,13 @@ class WordFragment : Fragment(), WordView {
     }
 
     override fun events(): Observable<WordEvent> {
-        return swipeActionCallback.swipes().flatMap {
-            when (it) {
-                is SwipeEvent.SwipeRight -> {
+        return swipeCallback.swipes().flatMap {
+            when (it.direction) {
+                SwipeDirection.RIGHT -> {
                     val wordContextId = adapter.items[it.viewHolder.adapterPosition].wordContextId
                     Observable.just(WordEvent.DeleteContext(wordContextId))
                 }
-                is SwipeEvent.SwipeLeft -> {
+                else -> {
                     Observable.empty()
                 }
             }

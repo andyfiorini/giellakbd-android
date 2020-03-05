@@ -1,17 +1,11 @@
 package com.android.inputmethod.ui.personaldictionary.dictionary
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.TextPaint
-import android.util.TypedValue
 import android.view.*
-import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
@@ -33,7 +27,6 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_personal_dictionary.*
 import no.divvun.dictionary.personal.PersonalDictionaryDatabase
 
-
 class DictionaryFragment : Fragment(), DictionaryView {
     private lateinit var rvDictionary: RecyclerView
     private lateinit var disposable: Disposable
@@ -49,7 +42,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
 
     override val events: PublishSubject<DictionaryEvent> = PublishSubject.create()
 
-    private lateinit var swipeActionCallback: SwipeActionCallback
+    private lateinit var swipeCallback: SwipeCallback
     private lateinit var snackbar: Snackbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,34 +69,12 @@ class DictionaryFragment : Fragment(), DictionaryView {
             navigateToAddWordDialogFragment(languageId)
         }
 
-        val paint = TextPaint().apply {
-            color = Color.WHITE
-            isAntiAlias = true
-            val textSizePixel = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16f, resources.displayMetrics)
-            textSize = textSizePixel
-        }
+        swipeCallback = SwipeCallback(SwipeDirection.LEFT to R.layout.swipe_left_block, SwipeDirection.RIGHT to R.layout.swipe_right_delete)
+        swipeCallback.attachTo(rvDictionary)
 
-        swipeActionCallback = SwipeActionCallback(
-                SwipeConf(
-                        left = SwipeActionConf(
-                                resources.getDrawable(R.drawable.vd_blacklist, activity?.theme),
-                                resources.getString(R.string.block_word),
-                                paint,
-                                ColorDrawable(ContextCompat.getColor(context!!, R.color.colorBlock))
-                        ),
-                        right = SwipeActionConf(
-                                resources.getDrawable(R.drawable.vd_delete, activity?.theme),
-                                resources.getString(R.string.delete_word),
-                                paint,
-                                ColorDrawable(ContextCompat.getColor(context!!, R.color.colorDelete))
-                        )
-                )
-        )
-        val ith = ItemTouchHelper(swipeActionCallback)
-        ith.attachToRecyclerView(rvDictionary)
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)
 
-        viewDisposable = events().subscribe{ events.onNext(it) }
+        viewDisposable = events().subscribe { events.onNext(it) }
     }
 
     override fun onDestroyView() {
@@ -216,16 +187,17 @@ class DictionaryFragment : Fragment(), DictionaryView {
                         }
                     }
                 },
-                swipeActionCallback.swipes().map {
-                    when (it) {
-                        is SwipeEvent.SwipeLeft -> {
+                swipeCallback.swipes().flatMap {
+                    when (it.direction) {
+                        SwipeDirection.LEFT -> {
                             val word = adapter.items[it.viewHolder.adapterPosition]
-                            DictionaryEvent.OnBlacklistEvent(word.wordId, word.word)
+                            Observable.just(DictionaryEvent.OnBlacklistEvent(word.wordId, word.word))
                         }
-                        is SwipeEvent.SwipeRight -> {
+                        SwipeDirection.RIGHT -> {
                             val word = adapter.items[it.viewHolder.adapterPosition]
-                            DictionaryEvent.OnRemoveEvent(word.wordId, word.word)
+                            Observable.just(DictionaryEvent.OnRemoveEvent(word.wordId, word.word))
                         }
+                        else -> Observable.empty()
                     }
                 }
         )
