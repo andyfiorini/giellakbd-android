@@ -599,4 +599,7 @@ Tip: You can download and remove dictionaries by going to &lt;b>Languages&#160;&
     <string name="block_word">Block</string>
     <string name="allow_word">Allow</string>
     <string name="snackbar_undo">Undo</string>
+    <string name="swipe_delete">Delete</string>
+    <string name="swipe_block">Block</string>
+    <string name="swipe_allow">Allow</string>
 </resources>
