@@ -602,10 +602,10 @@ Tip: You can download and remove dictionaries by going to &lt;b>Languages&#160;&
     <string name="swipe_block">Block</string>
     <string name="swipe_allow">Allow</string>
 
-    <string name="snackbar_delete_word"><b>%1$s</b> removed</string>
+    <string name="snackbar_delete_word"><![CDATA[<b>%1$s</b> removed]]></string>
     <string name="snackbar_delete_word_failed">Failed to delete word, %1$s</string>
-    <string name="snackbar_block_word"><b>%1$s</b> blocked</string>
+    <string name="snackbar_block_word"><![CDATA[<b>%1$s</b> blocked]]></string>
     <string name="snackbar_block_word_failed">Failed to block word, %1$s</string>
-    <string name="snackbar_allow_word"><b>%1$s</b> allowed</string>
+    <string name="snackbar_allow_word"><![CDATA[<b>%1$s</b> allowed]]></string>
     <string name="snackbar_allow_word_failed">Failed to allow word, %1$s</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.*
+import com.android.inputmethod.ui.getHtmlSpannedString
 import com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg
 import com.android.inputmethod.ui.personaldictionary.blacklist.BlacklistNavArg
 import com.android.inputmethod.ui.personaldictionary.dictionary.adapter.DictionaryWordEvent
@@ -125,7 +126,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
     private fun renderSnackbar(viewState: SnackbarViewState) {
         when (viewState) {
             is SnackbarViewState.WordRemoved -> {
-                snackbar.setText(getString(R.string.snackbar_delete_word, viewState.word))
+                snackbar.setText(getHtmlSpannedString(R.string.snackbar_delete_word, viewState.word))
                 snackbar.setAction(R.string.snackbar_undo) { undoRemove(viewState.wordId) }
                 snackbar.show()
             }
@@ -139,7 +140,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
                 snackbar.dismiss()
             }
             is SnackbarViewState.WordBlacklisted -> {
-                snackbar.setText(getString(R.string.snackbar_block_word, viewState.word))
+                snackbar.setText(getHtmlSpannedString(R.string.snackbar_block_word, viewState.word))
                 snackbar.setAction(R.string.snackbar_undo) { undoBlacklist(viewState.wordId) }
                 snackbar.show()
             }

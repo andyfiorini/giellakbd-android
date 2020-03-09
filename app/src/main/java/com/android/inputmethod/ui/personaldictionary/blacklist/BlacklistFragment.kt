@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
 import com.android.inputmethod.ui.components.recycleradapter.*
+import com.android.inputmethod.ui.getHtmlSpannedString
 import com.android.inputmethod.ui.personaldictionary.blacklist.adapter.BlacklistWordViewHolder
 import com.android.inputmethod.ui.personaldictionary.blacklistworddialog.BlacklistWordDialogNavArg
 import com.android.inputmethod.usecases.BlacklistUseCase
@@ -110,7 +111,7 @@ class BlacklistFragment : Fragment(), BlacklistView {
     private fun renderSnackbar(viewState: BlacklistSnackbarViewState) {
         when (viewState) {
             is BlacklistSnackbarViewState.WordRemoved -> {
-                snackbar.setText(getString(R.string.snackbar_delete_word, viewState.word))
+                snackbar.setText(getHtmlSpannedString(R.string.snackbar_allow_word, viewState.word))
                 snackbar.setAction(R.string.snackbar_undo) { undoRemove(viewState.wordId) }
                 snackbar.show()
             }
@@ -124,7 +125,7 @@ class BlacklistFragment : Fragment(), BlacklistView {
                 snackbar.dismiss()
             }
             is BlacklistSnackbarViewState.WordAllowed -> {
-                snackbar.setText(getString(R.string.snackbar_allow_word_failed, viewState.word))
+                snackbar.setText(getHtmlSpannedString(R.string.snackbar_delete_word, viewState.word))
                 snackbar.setAction(R.string.snackbar_undo) { undoAllow(viewState.wordId) }
                 snackbar.show()
             }
