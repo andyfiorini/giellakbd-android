@@ -110,12 +110,12 @@ class BlacklistFragment : Fragment(), BlacklistView {
     private fun renderSnackbar(viewState: BlacklistSnackbarViewState) {
         when (viewState) {
             is BlacklistSnackbarViewState.WordRemoved -> {
-                snackbar.setText("Word '${viewState.word}' was removed.")
+                snackbar.setText(getString(R.string.snackbar_delete_word, viewState.word))
                 snackbar.setAction(R.string.snackbar_undo) { undoRemove(viewState.wordId) }
                 snackbar.show()
             }
             is BlacklistSnackbarViewState.RemoveFailed -> {
-                snackbar.setText("Failed to remove word, ${viewState.wordException}")
+                snackbar.setText(getString(R.string.snackbar_delete_word_failed, viewState.wordException))
                 snackbar.setAction(null, null)
                 snackbar.show()
                 adapter.notifyDataSetChanged()
@@ -124,12 +124,12 @@ class BlacklistFragment : Fragment(), BlacklistView {
                 snackbar.dismiss()
             }
             is BlacklistSnackbarViewState.WordAllowed -> {
-                snackbar.setText("Word '${viewState.word}' was allowed.")
+                snackbar.setText(getString(R.string.snackbar_allow_word_failed, viewState.word))
                 snackbar.setAction(R.string.snackbar_undo) { undoAllow(viewState.wordId) }
                 snackbar.show()
             }
             is BlacklistSnackbarViewState.AllowFailed -> {
-                snackbar.setText("Failed to remove word, ${viewState.blacklistException}")
+                snackbar.setText(getString(R.string.snackbar_allow_word_failed, viewState.blacklistException))
                 snackbar.setAction(null, null)
                 snackbar.show()
                 adapter.notifyDataSetChanged()

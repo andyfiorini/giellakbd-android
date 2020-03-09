@@ -125,12 +125,12 @@ class DictionaryFragment : Fragment(), DictionaryView {
     private fun renderSnackbar(viewState: SnackbarViewState) {
         when (viewState) {
             is SnackbarViewState.WordRemoved -> {
-                snackbar.setText("Word '${viewState.word}' was removed.")
+                snackbar.setText(getString(R.string.snackbar_delete_word, viewState.word))
                 snackbar.setAction(R.string.snackbar_undo) { undoRemove(viewState.wordId) }
                 snackbar.show()
             }
             is SnackbarViewState.RemoveFailed -> {
-                snackbar.setText("Failed to remove word, ${viewState.wordException}")
+                snackbar.setText(getString(R.string.snackbar_delete_word_failed, viewState.wordException))
                 snackbar.setAction(null, null)
                 snackbar.show()
                 adapter.notifyDataSetChanged()
@@ -139,12 +139,12 @@ class DictionaryFragment : Fragment(), DictionaryView {
                 snackbar.dismiss()
             }
             is SnackbarViewState.WordBlacklisted -> {
-                snackbar.setText("Word '${viewState.word}' was blacklisted.")
+                snackbar.setText(getString(R.string.snackbar_block_word, viewState.word))
                 snackbar.setAction(R.string.snackbar_undo) { undoBlacklist(viewState.wordId) }
                 snackbar.show()
             }
             is SnackbarViewState.BlacklistFailed -> {
-                snackbar.setText("Failed to remove word, ${viewState.blacklistException}")
+                snackbar.setText(getString(R.string.snackbar_block_word_failed, viewState.blacklistException))
                 snackbar.setAction(null, null)
                 snackbar.show()
                 adapter.notifyDataSetChanged()

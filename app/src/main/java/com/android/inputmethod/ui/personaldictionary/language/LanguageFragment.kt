@@ -64,21 +64,6 @@ class LanguageFragment : Fragment(), LanguageView {
         g_personallang_empty.isInvisible = viewState.languages.isNotEmpty()
     }
 
-    /*
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.dictionary_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.fragment_upload -> {
-                navigateToUploadLanguage(languageId)
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-*/
     override fun events(): Observable<LanguageEvent> {
         return adapter.events().map {
             when (it) {
