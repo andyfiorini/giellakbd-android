@@ -45,26 +45,26 @@ class SwipeCallback(private val swipeLayouts: Map<SwipeDirection, Int>) : ItemTo
 
         when {
             // canvas, swipeView, width, height, dY, dX
-            dX > 0 -> {
+            dX > 0 && swipeViewMap.containsKey(SwipeDirection.RIGHT) -> {
                 // Swipe to right
                 val swipeView = swipeViewMap.getValue(SwipeDirection.RIGHT)
                 val width = min(dX.toInt(), itemView.width)
                 renderSwipeView(swipeView, c, width, itemView.height, itemView.left.toFloat(), itemView.top.toFloat())
             }
-            dY > 0 -> {
+            dY > 0 && swipeViewMap.containsKey(SwipeDirection.DOWN) -> {
                 // Swipe to down
                 val swipeView = swipeViewMap.getValue(SwipeDirection.DOWN)
                 val height = min(dY.toInt(), itemView.height)
                 renderSwipeView(swipeView, c, itemView.width, height, itemView.left.toFloat(), itemView.top.toFloat())
             }
-            dX < 0 -> {
+            dX < 0 && swipeViewMap.containsKey(SwipeDirection.LEFT) -> {
                 // Swipe to left
                 val swipeView = swipeViewMap.getValue(SwipeDirection.LEFT)
                 val width = min(abs(dX.toInt()), itemView.width)
                 val transX = max(itemView.right + dX, itemView.left.toFloat())
                 renderSwipeView(swipeView, c, width, itemView.height, transX, itemView.top.toFloat())
             }
-            dY < 0 -> {
+            dY < 0 && swipeViewMap.containsKey(SwipeDirection.UP) -> {
                 // Swipe to up
                 val swipeView = swipeViewMap.getValue(SwipeDirection.UP)
                 val height = min(abs(dY.toInt()), itemView.height)
