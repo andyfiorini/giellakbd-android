@@ -34,6 +34,6 @@ fun levenshtein(lhs: CharSequence, rhs: CharSequence): Int {
     return cost[lhsLength - 1]
 }
 
-fun String.levenshtein(other: String): Int {
+fun String.levenshteinTo(other: String): Int {
     return levenshtein(this, other)
 }

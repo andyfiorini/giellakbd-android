@@ -9,7 +9,7 @@ import com.android.inputmethod.latin.common.ComposedData
 import com.android.inputmethod.latin.settings.SettingsValuesForSuggestion
 import com.android.inputmethod.usecases.CreateLanguageUseCase
 import no.divvun.createTag
-import no.divvun.levenshtein
+import no.divvun.levenshteinTo
 import java.util.*
 
 class PersonalDictionary(private val context: Context?, locale: Locale) : Dictionary(TYPE_USER, locale) {
@@ -42,7 +42,7 @@ class PersonalDictionary(private val context: Context?, locale: Locale) : Dictio
         val scoreMap = database.dictionaryDao().dictionary(languageId)
                 .asSequence()
                 .map { it.word }
-                .map { it to it.levenshtein(composedData.mTypedWord) }
+                .map { it to it.levenshteinTo(composedData.mTypedWord) }
                 .filter { it.second < 4 }
                 .sortedBy { it.second }
                 .take(5).toList()
