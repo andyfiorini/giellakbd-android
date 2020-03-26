@@ -18,7 +18,11 @@ import com.android.inputmethod.ui.personaldictionary.blacklistworddialog.Blackli
 import com.android.inputmethod.usecases.BlacklistUseCase
 import com.android.inputmethod.usecases.SetBlacklistUseCase
 import com.android.inputmethod.usecases.SoftDeleteWordUseCase
+import com.elevate.rxbinding3.swipes
 import com.google.android.material.snackbar.Snackbar
+import com.rawa.recyclerswipes.RecyclerSwipes
+import com.rawa.recyclerswipes.SwipeDirection
+import com.rawa.recyclerswipes.attachTo
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -42,7 +46,7 @@ class BlacklistFragment : Fragment(), BlacklistView {
 
     override val events = PublishSubject.create<BlacklistEvent>()
 
-    private lateinit var swipeCallback: SwipeCallback
+    private lateinit var swipes: RecyclerSwipes
     private lateinit var snackbar: Snackbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,11 +73,11 @@ class BlacklistFragment : Fragment(), BlacklistView {
             navigateToBlacklistWordDialogFragment(languageId)
         }
 
-        swipeCallback = SwipeCallback(
+        swipes = RecyclerSwipes(
                 SwipeDirection.LEFT to R.layout.swipe_left_allow,
                 SwipeDirection.RIGHT to R.layout.swipe_right_delete
         )
-        swipeCallback.attachTo(rvBlacklist)
+        swipes.attachTo(rvBlacklist)
 
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)
         viewDisposable = events().subscribe { events.onNext(it) }
@@ -147,7 +151,7 @@ class BlacklistFragment : Fragment(), BlacklistView {
     }
 
     private fun events(): Observable<BlacklistEvent> {
-        return swipeCallback.swipes().flatMap {
+        return swipes.swipes().flatMap {
             when (it.direction) {
                 SwipeDirection.LEFT -> {
                     val word = adapter.items[it.viewHolder.adapterPosition]

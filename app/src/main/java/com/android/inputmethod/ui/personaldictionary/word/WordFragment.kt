@@ -10,10 +10,14 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
-import com.android.inputmethod.ui.components.recycleradapter.*
+import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
 import com.android.inputmethod.ui.personaldictionary.word.adapter.WordContextViewHolder
 import com.android.inputmethod.usecases.RemoveWordContextUseCase
 import com.android.inputmethod.usecases.WordContextUseCase
+import com.elevate.rxbinding3.swipes
+import com.rawa.recyclerswipes.RecyclerSwipes
+import com.rawa.recyclerswipes.SwipeDirection
+import com.rawa.recyclerswipes.attachTo
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -33,7 +37,7 @@ class WordFragment : Fragment(), WordView {
     private val args by navArgs<WordFragmentArgs>()
     override val wordId by lazy { args.wordNavArg.wordId }
 
-    private lateinit var swipeCallback: SwipeCallback
+    private lateinit var swipeCallback: RecyclerSwipes
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +57,7 @@ class WordFragment : Fragment(), WordView {
         rvDictionary.layoutManager = LinearLayoutManager(context!!)
         rvDictionary.adapter = adapter
 
-        swipeCallback = SwipeCallback(SwipeDirection.RIGHT to R.layout.swipe_right_delete)
+        swipeCallback = RecyclerSwipes(SwipeDirection.RIGHT to R.layout.swipe_right_delete)
         swipeCallback.attachTo(rvDictionary)
     }
 

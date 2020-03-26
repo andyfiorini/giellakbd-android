@@ -36,7 +36,6 @@ class BlacklistWordDialogFragment : DialogFragment(), BlacklistWordDialogView {
         val validateWordUseCase = ValidateWordUseCase()
         val blacklistWordUseCase = BlacklistWordUseCase(database, validateWordUseCase)
         presenter = BlacklistWordDialogPresenter(this, blacklistWordUseCase, validateWordUseCase)
-        tiet_blacklistword.requestFocus()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

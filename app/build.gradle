@@ -109,6 +109,9 @@ dependencies {
     kapt "io.arrow-kt:arrow-meta:$arrowVersion"
     implementation "com.github.lenguyenthanh:RxArrow:$rxArrowVersion"
 
+    implementation 'com.github.rawa.recycler-swipes:recyclerswipes:0.1.2'
+    implementation 'com.github.rawa.recycler-swipes:recyclerswipes-rxbinding:0.1.2'
+
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 }
 

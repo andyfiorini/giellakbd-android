@@ -46,7 +46,6 @@ class AddWordDialogFragment : DialogFragment(), AddWordDialogView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         b_addword_cancel.setOnClickListener { dismiss() }
-
     }
 
 

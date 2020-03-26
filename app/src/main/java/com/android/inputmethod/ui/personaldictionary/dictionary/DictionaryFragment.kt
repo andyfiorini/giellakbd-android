@@ -9,7 +9,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.inputmethod.latin.R
-import com.android.inputmethod.ui.components.recycleradapter.*
+import com.android.inputmethod.ui.components.recycleradapter.EventAdapter
 import com.android.inputmethod.ui.getHtmlSpannedString
 import com.android.inputmethod.ui.personaldictionary.addworddialog.AddWordDialogNavArg
 import com.android.inputmethod.ui.personaldictionary.blacklist.BlacklistNavArg
@@ -20,7 +20,11 @@ import com.android.inputmethod.ui.personaldictionary.word.WordNavArg
 import com.android.inputmethod.usecases.DictionaryUseCase
 import com.android.inputmethod.usecases.SetBlacklistUseCase
 import com.android.inputmethod.usecases.SoftDeleteWordUseCase
+import com.elevate.rxbinding3.swipes
 import com.google.android.material.snackbar.Snackbar
+import com.rawa.recyclerswipes.RecyclerSwipes
+import com.rawa.recyclerswipes.SwipeDirection
+import com.rawa.recyclerswipes.attachTo
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -43,7 +47,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
 
     override val events: PublishSubject<DictionaryEvent> = PublishSubject.create()
 
-    private lateinit var swipeCallback: SwipeCallback
+    private lateinit var swipeCallback: RecyclerSwipes
     private lateinit var snackbar: Snackbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +74,7 @@ class DictionaryFragment : Fragment(), DictionaryView {
             navigateToAddWordDialogFragment(languageId)
         }
 
-        swipeCallback = SwipeCallback(SwipeDirection.LEFT to R.layout.swipe_left_block, SwipeDirection.RIGHT to R.layout.swipe_right_delete)
+        swipeCallback = RecyclerSwipes(SwipeDirection.LEFT to R.layout.swipe_left_block, SwipeDirection.RIGHT to R.layout.swipe_right_delete)
         swipeCallback.attachTo(rvDictionary)
 
         snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)
