@@ -171,13 +171,6 @@ class KeyboardId(val mElementId: Int, params: KeyboardLayoutSet.Params) {
         const val ELEMENT_EMOJI_CATEGORY7 = 17
         const val ELEMENT_EMOJI_CATEGORY8 = 18
         const val ELEMENT_EMOJI_CATEGORY9 = 19
-        const val ELEMENT_EMOJI_CATEGORY10 = 20
-        const val ELEMENT_EMOJI_CATEGORY11 = 21
-        const val ELEMENT_EMOJI_CATEGORY12 = 22
-        const val ELEMENT_EMOJI_CATEGORY13 = 23
-        const val ELEMENT_EMOJI_CATEGORY14 = 24
-        const val ELEMENT_EMOJI_CATEGORY15 = 25
-        const val ELEMENT_EMOJI_CATEGORY16 = 26
 
         private fun computeHashCode(id: KeyboardId): Int {
             return Arrays.hashCode(arrayOf(id.mElementId, id.mMode, id.mWidth, id.mHeight,
@@ -220,13 +213,6 @@ class KeyboardId(val mElementId: Int, params: KeyboardLayoutSet.Params) {
                 ELEMENT_EMOJI_CATEGORY7 -> return "emojiCategory7"
                 ELEMENT_EMOJI_CATEGORY8 -> return "emojiCategory8"
                 ELEMENT_EMOJI_CATEGORY9 -> return "emojiCategory9"
-                ELEMENT_EMOJI_CATEGORY10 -> return "emojiCategory10"
-                ELEMENT_EMOJI_CATEGORY11 -> return "emojiCategory11"
-                ELEMENT_EMOJI_CATEGORY12 -> return "emojiCategory12"
-                ELEMENT_EMOJI_CATEGORY13 -> return "emojiCategory13"
-                ELEMENT_EMOJI_CATEGORY14 -> return "emojiCategory14"
-                ELEMENT_EMOJI_CATEGORY15 -> return "emojiCategory15"
-                ELEMENT_EMOJI_CATEGORY16 -> return "emojiCategory16"
                 else -> return null
             }
         }

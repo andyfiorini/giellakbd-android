@@ -44,26 +44,21 @@ final class EmojiCategory {
 
     private static final int ID_UNSPECIFIED = -1;
     public static final int ID_RECENTS = 0;
-    private static final int ID_PEOPLE = 1;
-    private static final int ID_OBJECTS = 2;
-    private static final int ID_NATURE = 3;
-    private static final int ID_PLACES = 4;
-    private static final int ID_SYMBOLS = 5;
-    private static final int ID_EMOTICONS = 6;
-    private static final int ID_FLAGS = 7;
-    private static final int ID_EIGHT_SMILEY_PEOPLE = 8;
-    private static final int ID_EIGHT_ANIMALS_NATURE = 9;
-    private static final int ID_EIGHT_FOOD_DRINK = 10;
-    private static final int ID_EIGHT_TRAVEL_PLACES = 11;
-    private static final int ID_EIGHT_ACTIVITY = 12;
-    private static final int ID_EIGHT_OBJECTS = 13;
-    private static final int ID_EIGHT_SYMBOLS = 14;
-    private static final int ID_EIGHT_FLAGS = 15;
-    private static final int ID_EIGHT_SMILEY_PEOPLE_BORING = 16;
+
+    private static final int ID_SMILEY_AND_EMOTION = 1;
+    private static final int ID_PEOPLE_AND_BODY = 2;
+    private static final int ID_ANIMALS_AND_NATURE = 3;
+    private static final int ID_FOOD_AND_DRINK = 4;
+    private static final int ID_TRAVEL_AND_PLACES = 5;
+    private static final int ID_ACTIVITIES = 6;
+    private static final int ID_OBJECTS = 7;
+    private static final int ID_SYMBOLS = 8;
+    private static final int ID_FLAGS = 9;
 
     public final class CategoryProperties {
         public final int mCategoryId;
         public final int mPageCount;
+
         public CategoryProperties(final int categoryId, final int pageCount) {
             mCategoryId = categoryId;
             mPageCount = pageCount;
@@ -72,22 +67,16 @@ final class EmojiCategory {
 
     private static final String[] sCategoryName = {
             "recents",
-            "people",
-            "objects",
-            "nature",
-            "places",
-            "symbols",
-            "emoticons",
-            "flags",
-            "smiley & people",
+            "smiley & emotion",
+            "people & body",
             "animals & nature",
             "food & drink",
             "travel & places",
-            "activity",
-            "objects2",
-            "symbols2",
-            "flags2",
-            "smiley & people2" };
+            "activities",
+            "objects",
+            "symbols",
+            "flags"
+    };
 
     private static final int[] sCategoryTabIconAttr = {
             R.styleable.EmojiPalettesView_iconEmojiRecentsTab,
@@ -99,33 +88,21 @@ final class EmojiCategory {
             R.styleable.EmojiPalettesView_iconEmojiCategory6Tab,
             R.styleable.EmojiPalettesView_iconEmojiCategory7Tab,
             R.styleable.EmojiPalettesView_iconEmojiCategory8Tab,
-            R.styleable.EmojiPalettesView_iconEmojiCategory9Tab,
-            R.styleable.EmojiPalettesView_iconEmojiCategory10Tab,
-            R.styleable.EmojiPalettesView_iconEmojiCategory11Tab,
-            R.styleable.EmojiPalettesView_iconEmojiCategory12Tab,
-            R.styleable.EmojiPalettesView_iconEmojiCategory13Tab,
-            R.styleable.EmojiPalettesView_iconEmojiCategory14Tab,
-            R.styleable.EmojiPalettesView_iconEmojiCategory15Tab,
-            R.styleable.EmojiPalettesView_iconEmojiCategory16Tab };
+            R.styleable.EmojiPalettesView_iconEmojiCategory9Tab
+    };
 
     private static final int[] sAccessibilityDescriptionResourceIdsForCategories = {
             R.string.spoken_descrption_emoji_category_recents,
-            R.string.spoken_descrption_emoji_category_people,
-            R.string.spoken_descrption_emoji_category_objects,
-            R.string.spoken_descrption_emoji_category_nature,
-            R.string.spoken_descrption_emoji_category_places,
-            R.string.spoken_descrption_emoji_category_symbols,
-            R.string.spoken_descrption_emoji_category_emoticons,
-            R.string.spoken_descrption_emoji_category_flags,
-            R.string.spoken_descrption_emoji_category_eight_smiley_people,
-            R.string.spoken_descrption_emoji_category_eight_animals_nature,
-            R.string.spoken_descrption_emoji_category_eight_food_drink,
-            R.string.spoken_descrption_emoji_category_eight_travel_places,
-            R.string.spoken_descrption_emoji_category_eight_activity,
+            R.string.spoken_descrption_emoji_category_smiley_people,
+            R.string.spoken_descrption_emoji_category_smiley_people,
+            R.string.spoken_descrption_emoji_category_animals_nature,
+            R.string.spoken_descrption_emoji_category_food_drink,
+            R.string.spoken_descrption_emoji_category_travel_places,
+            R.string.spoken_descrption_emoji_category_activities,
             R.string.spoken_descrption_emoji_category_objects,
             R.string.spoken_descrption_emoji_category_symbols,
             R.string.spoken_descrption_emoji_category_flags,
-            R.string.spoken_descrption_emoji_category_eight_smiley_people };
+            };
 
     private static final int[] sCategoryElementId = {
             KeyboardId.ELEMENT_EMOJI_RECENTS,
@@ -137,14 +114,7 @@ final class EmojiCategory {
             KeyboardId.ELEMENT_EMOJI_CATEGORY6,
             KeyboardId.ELEMENT_EMOJI_CATEGORY7,
             KeyboardId.ELEMENT_EMOJI_CATEGORY8,
-            KeyboardId.ELEMENT_EMOJI_CATEGORY9,
-            KeyboardId.ELEMENT_EMOJI_CATEGORY10,
-            KeyboardId.ELEMENT_EMOJI_CATEGORY11,
-            KeyboardId.ELEMENT_EMOJI_CATEGORY12,
-            KeyboardId.ELEMENT_EMOJI_CATEGORY13,
-            KeyboardId.ELEMENT_EMOJI_CATEGORY14,
-            KeyboardId.ELEMENT_EMOJI_CATEGORY15,
-            KeyboardId.ELEMENT_EMOJI_CATEGORY16};
+            KeyboardId.ELEMENT_EMOJI_CATEGORY9};
 
     private final SharedPreferences mPrefs;
     private final Resources mRes;
@@ -160,7 +130,7 @@ final class EmojiCategory {
     private int mCurrentCategoryPageId = 0;
 
     public EmojiCategory(final SharedPreferences prefs, final Resources res,
-            final KeyboardLayoutSet layoutSet, final TypedArray emojiPaletteViewAttr) {
+                         final KeyboardLayoutSet layoutSet, final TypedArray emojiPaletteViewAttr) {
         mPrefs = prefs;
         mRes = res;
         mMaxPageKeyCount = res.getInteger(R.integer.config_emoji_keyboard_max_page_key_count);
@@ -173,28 +143,19 @@ final class EmojiCategory {
 
         int defaultCategoryId = EmojiCategory.ID_SYMBOLS;
         addShownCategoryId(EmojiCategory.ID_RECENTS);
-        if (canShowUnicodeEightEmoji()) {
-            defaultCategoryId = EmojiCategory.ID_EIGHT_SMILEY_PEOPLE;
-            addShownCategoryId(EmojiCategory.ID_EIGHT_SMILEY_PEOPLE);
-            addShownCategoryId(EmojiCategory.ID_EIGHT_ANIMALS_NATURE);
-            addShownCategoryId(EmojiCategory.ID_EIGHT_FOOD_DRINK);
-            addShownCategoryId(EmojiCategory.ID_EIGHT_TRAVEL_PLACES);
-            addShownCategoryId(EmojiCategory.ID_EIGHT_ACTIVITY);
-            addShownCategoryId(EmojiCategory.ID_EIGHT_OBJECTS);
-            addShownCategoryId(EmojiCategory.ID_EIGHT_SYMBOLS);
-            addShownCategoryId(EmojiCategory.ID_FLAGS); // Exclude combinations without glyphs.
-        } else {
-            defaultCategoryId = EmojiCategory.ID_PEOPLE;
-            addShownCategoryId(EmojiCategory.ID_PEOPLE);
-            addShownCategoryId(EmojiCategory.ID_OBJECTS);
-            addShownCategoryId(EmojiCategory.ID_NATURE);
-            addShownCategoryId(EmojiCategory.ID_PLACES);
-            addShownCategoryId(EmojiCategory.ID_SYMBOLS);
-            if (canShowFlagEmoji()) {
-                addShownCategoryId(EmojiCategory.ID_FLAGS);
-            }
-        }
-        addShownCategoryId(EmojiCategory.ID_EMOTICONS);
+        // We assume unicode is a thing
+        //if (canShowUnicodeEightEmoji()) {
+        defaultCategoryId = EmojiCategory.ID_SMILEY_AND_EMOTION;
+        addShownCategoryId(EmojiCategory.ID_SMILEY_AND_EMOTION);
+        addShownCategoryId(EmojiCategory.ID_PEOPLE_AND_BODY);
+        addShownCategoryId(EmojiCategory.ID_ANIMALS_AND_NATURE);
+        addShownCategoryId(EmojiCategory.ID_FOOD_AND_DRINK);
+        addShownCategoryId(EmojiCategory.ID_TRAVEL_AND_PLACES);
+        addShownCategoryId(EmojiCategory.ID_ACTIVITIES);
+        addShownCategoryId(EmojiCategory.ID_OBJECTS);
+        addShownCategoryId(EmojiCategory.ID_SYMBOLS);
+        addShownCategoryId(EmojiCategory.ID_FLAGS); // Exclude combinations without glyphs.
+        // }
 
         DynamicGridKeyboard recentsKbd =
                 getKeyboard(EmojiCategory.ID_RECENTS, 0 /* categoryPageId */);

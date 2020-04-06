@@ -20,6 +20,7 @@ import com.android.inputmethod.latin.common.Constants;
 import com.android.inputmethod.latin.common.StringUtils;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * The string parser of codesArray specification for <GridRows />. The attribute codesArray is an
@@ -55,6 +56,7 @@ public final class CodesArrayParser {
     }
 
     public static String parseLabel(final String codesArraySpec) {
+        Log.d("CodesArrayParser", "parseLabel: " + codesArraySpec);
         final String labelSpec = getLabelSpec(codesArraySpec);
         final StringBuilder sb = new StringBuilder();
         for (final String codeInHex : labelSpec.split(COMMA_REGEX)) {

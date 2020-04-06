@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+
+<resources>
+    <!-- Dummy codeArrays for recents emoji keyboard.
+         Do not remove these keys, because they are used as a template. -->
+    <array name="emoji_recents" format="string">
+        <!-- These code point should be aligned with {@link RecentsKeyboard#TEMPLATE_KEY_CODE_*. -->
+        <item>30</item>
+        <item>31</item>
+    </array>
+</resources>

@@ -432,6 +432,9 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
                 final int supportedMinSdkVersion;
                 if (codesArrayId != 0) {
                     final String codeArraySpec = array[i];
+                    if(codeArraySpec == null) {
+                        continue;
+                    }
                     label = CodesArrayParser.parseLabel(codeArraySpec);
                     code = CodesArrayParser.parseCode(codeArraySpec);
                     outputText = CodesArrayParser.parseOutputText(codeArraySpec);
